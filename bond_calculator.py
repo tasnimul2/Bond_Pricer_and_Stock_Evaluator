@@ -36,7 +36,8 @@ def get_30360_daycount_frac(start, end):
                 max(0, 30 - start.day) + min(30, end.day)
     return(day_count / day_in_year )
     
-
+    
+''' Mohammed '''
 def get_actualactual_daycount_frac(start, end):
     # TODO
     # result = ...
@@ -51,6 +52,7 @@ class BondCalculator(object):
     def __init__(self, pricing_date):
         self.pricing_date = pricing_date
 
+    ''' Mohammed '''
     def calc_one_period_discount_factor(self, bond, yld):
         # calculate the future cashflow vectors
         # TODO: calculate the one period discount factor
@@ -60,7 +62,7 @@ class BondCalculator(object):
         # end TODO
         return(df)
 
-
+    ''' Kyle '''
     def calc_clean_price(self, bond, yld):
         '''
         Calculate bond price as of the pricing_date for a given yield
@@ -76,6 +78,7 @@ class BondCalculator(object):
         
         return(result)
 
+    ''' Kyle '''
     def calc_accrual_interest(self, bond, settle_date):
         '''
         calculate the accrual interest on given a settle_date
@@ -100,6 +103,7 @@ class BondCalculator(object):
         # end TODO
         return(result)
 
+    ''' Tamzid '''
     def calc_macaulay_duration(self, bond, yld):
         '''
         time to cashflow weighted by PV
@@ -110,6 +114,7 @@ class BondCalculator(object):
         # end TODO
         return(result)
 
+    ''' Tamzid '''
     def calc_modified_duration(self, bond, yld):
         '''
         calculate modified duration at a certain yield yld
