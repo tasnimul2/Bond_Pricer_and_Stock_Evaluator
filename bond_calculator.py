@@ -3,13 +3,12 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
-@Group Name    : 
-@Student Name  : first last
+@Group Name    : Rocket
+@Student Name  : Mohammed Chowdhury , Kyle Coleman , Tamzid Chowdhury
 
 @Date          : Fall 2021
 
 A Bond Calculator Class
-defe
 '''
 
 import math
@@ -37,11 +36,20 @@ def get_30360_daycount_frac(start, end):
     return(day_count / day_in_year )
     
     
-''' Mohammed '''
+''' Mohammed 
+this method, and day-count in general, is a standard method for calculating the number of days between two dates.
+actual days between the start date and end date in the numerator / actual days in that year
+'''
 def get_actualactual_daycount_frac(start, end):
     # TODO
     # result = ...
     # end TODO
+    end_of_year = date(start.year, 12, 31)
+    beginning_of_year = date(start.year, 1, 1)
+    days_in_the_year = (end_of_year - beginning_of_year).days + 1
+
+    num_days_btwn_strt_n_end = (end-start).days
+    result = num_days_btwn_strt_n_end / days_in_the_year
     return(result)
 
 class BondCalculator(object):
@@ -57,9 +65,24 @@ class BondCalculator(object):
         # calculate the future cashflow vectors
         # TODO: calculate the one period discount factor
         # hint: need to use if else statement for different payment frequency cases
-        df = None
-        
-        # end TODO
+
+        # discount factor = 1 / (1 x (1 + Discount Rate) ^ Period Number)
+        # since this is 1 period, we can exclude period number since 1/(1+yield) ^ 1 = 1/(1+yield)
+        # 1 period df = 1/(1+yield) for annual
+        # 1 period df = 1/(1+yield/2) for semi-annual
+        if (bond.payment_freq == PaymentFrequency.ANNUAL):
+            df = 1/(1+yld)
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            df = 1/(1+yld/2)
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            df = 1/(1+yld/4)
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            df = 1/(1+yld/12)
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            df = np.exp(yld* -1) # means e^-yield
+        else:
+            df = None
+
         return(df)
 
     ''' Kyle '''
