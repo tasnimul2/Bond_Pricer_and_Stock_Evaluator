@@ -9,7 +9,6 @@
 @Date          : Fall 2021
 
 A Bond Calculator Class
-defe
 '''
 
 import math
@@ -66,9 +65,24 @@ class BondCalculator(object):
         # calculate the future cashflow vectors
         # TODO: calculate the one period discount factor
         # hint: need to use if else statement for different payment frequency cases
-        df = None
-        
-        # end TODO
+
+        # discount factor = 1 / (1 x (1 + Discount Rate) ^ Period Number)
+        # since this is 1 period, we can exclude period number since 1/(1+yield) ^ 1 = 1/(1+yield)
+        # 1 period df = 1/(1+yield) for annual
+        # 1 period df = 1/(1+yield/2) for semi-annual
+        if (bond.payment_freq == PaymentFrequency.ANNUAL):
+            df = 1/(1+yld)
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            df = 1/(1+yld/2)
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            df = 1/(1+yld/4)
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            df = 1/(1+yld/12)
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            df = np.exp(yld* -1) # means e^-yield
+        else:
+            df = None
+
         return(df)
 
     ''' Kyle '''
