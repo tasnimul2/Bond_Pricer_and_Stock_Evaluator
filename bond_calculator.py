@@ -3,8 +3,8 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
-@Group Name    : 
-@Student Name  : first last
+@Group Name    : Rocket
+@Student Name  : Mohammed Chowdhury , Kyle Coleman , Tamzid Chowdhury
 
 @Date          : Fall 2021
 
@@ -37,11 +37,20 @@ def get_30360_daycount_frac(start, end):
     return(day_count / day_in_year )
     
     
-''' Mohammed '''
+''' Mohammed 
+this method, and day-count in general, is a standard method for calculating the number of days between two dates.
+actual days between the start date and end date in the numerator / actual days in that year
+'''
 def get_actualactual_daycount_frac(start, end):
     # TODO
     # result = ...
     # end TODO
+    end_of_year = date(start.year, 12, 31)
+    beginning_of_year = date(start.year, 1, 1)
+    days_in_the_year = (end_of_year - beginning_of_year).days + 1
+
+    num_days_btwn_strt_n_end = (end-start).days
+    result = num_days_btwn_strt_n_end / days_in_the_year
     return(result)
 
 class BondCalculator(object):
