@@ -91,15 +91,24 @@ class BondCalculator(object):
         Calculate bond price as of the pricing_date for a given yield
         bond price should be expressed in percentage eg 100 for a par (face value) bond
         '''
-        result = None
-        accrual = None
-        dirty = None
         
         one_period_factor = self.calc_one_period_discount_factor(bond, yld)
         # TODO: implement calculation here
-        
-        '''result = dirty - accrual'''
-        result = one_period_factor
+        df = self.calc_one_period_discount_factor
+        '''Clean Price (%) = ( Coupon * (1 - (1 + yield) ^ - periods) / yield + 1 / (1 + yield)^periods ) * 100'''
+        if (bond.payment_freq == PaymentFrequency.ANNUAL): 
+            n = 1
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            n = 2
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            n = 4
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            n = 12
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            n = None #TODO
+        else:
+            n = None
+        result = ( (bond.coupon/n) * (1-(1+yld/n)**(n*-bond.term)) / (yld/n) + 1/((1+yld/n)**(n*bond.term)) )* 100
         # end TODO:
         
         return(result)
@@ -183,9 +192,8 @@ def _example2():
 
     yld = 0.06
     px_bond2 = engine.calc_clean_price(bond, yld)
-    '''print("The clean price of bond 2 is: ", format(px_bond2, '.4f'))'''
-    print("The clean price of bond 2 is: ", format(px_bond2))
-    '''assert( abs(px_bond2 - 92.640) < 0.01)'''
+    print("The clean price of bond 2 is: ", format(px_bond2, '.4f'))
+    assert( abs(px_bond2 - 92.640) < 0.01)
 
 '''
 '''  
@@ -226,8 +234,8 @@ def _example4():
 def _test():
     # basic test cases
     _example2()
-    '''
     _example3()
+    '''
     _example4()
     '''
 
