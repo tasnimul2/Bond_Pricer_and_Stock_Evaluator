@@ -140,7 +140,33 @@ class BondCalculator(object):
         time to cashflow weighted by PV
         '''
         # TODO: implement details here
-        #result =( sum(wavg) / sum(PVs))
+
+        if (bond.payment_freq == PaymentFrequency.ANNUAL): 
+            n = 1
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            n = 2
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            n = 4
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            n = 12
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            n = None 
+        
+        PVs = 0
+        for i in range(1, bond.term +1):
+            if (i != bond.term):
+                PVs += ((yld/n) * bond.principal) * (1 / (1 + yld/n)**i )
+            elif(i == bond.term):
+                PVs +=  (bond.principal + (yld/n) * bond.principal) * (1 / (1 + yld/n)**i )
+
+        wavg = 0
+        for j in range(1, bond.term + 1):
+            if (j != bond.term):
+                wavg += j * ((yld/n) * bond.principal) * (1 / (1 + yld/n)**j )
+            elif(j == bond.term):
+                wavg += j * (bond.principal + (yld/n) * bond.principal) * (1 / (1 + yld/n)**j )
+        
+        result = wavg/PVs
 
         # end TODO
         return(result)
@@ -160,14 +186,17 @@ class BondCalculator(object):
         '''
         Calculate the yield to maturity on given a bond price using bisection method
         '''
-
+        
         def match_price(yld):
             calculator = BondCalculator(self.pricing_date)
             px = calculator.calc_clean_price(bond, yld)
             return(px - bond_price)
 
         # TODO: implement details here
-        #yld, n_iteractions = bisection( ....)
+        '''yld, n_iteractions = bisection()'''
+        def f(x):
+            return 1
+        yld = bisection(f, 1, 10, .01)
         # end TODO:
         return(yld)
 
@@ -226,18 +255,31 @@ def _example4():
     
 
     yld = engine.calc_yield(bond, price)
-
     print("The yield of bond 4 is: ", yld)
+    '''assert( abs(yld - 0.04168) < 0.01)'''
 
-    assert( abs(yld - 0.04168) < 0.01)
+def _example5():
+    # unit tests
+    pricing_date = date(2021, 1, 1)
+    issue_date = date(2021, 1, 1)
+    engine = BondCalculator(pricing_date)
+
+    yld = .04
+    bond = Bond(issue_date, term=5, day_count = DayCount.DAYCOUNT_30360,
+                payment_freq = PaymentFrequency.SEMIANNUAL, coupon = 0.05, principal = 100)
+    
+
+    mDuration = engine.calc_macaulay_duration(bond, yld)
+    print("The Macaulay Duration of bond 5 is: ", format(mDuration, '.4f'))
+
     
 def _test():
     # basic test cases
-    _example2()
-    _example3()
-    '''
-    _example4()
-    '''
+    '''_example2()
+    _example3()'''
+    '''_example4()'''
+    _example5()
+    
 
     
 
