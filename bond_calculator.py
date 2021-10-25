@@ -39,9 +39,13 @@ def get_30360_daycount_frac(start, end):
     
 ''' Mohammed '''
 def get_actualactual_daycount_frac(start, end):
-    # TODO
-    # result = ...
-    # end TODO
+    
+   end_of_year = date(start.year, 12, 31)
+    beginning_of_year = date( start.year, 1, 1)
+    days_in_the_year = (end_of_year - beginning_of_year).days + 1
+
+    num_days_btwn_strt_n_end = (end-start).days
+    result = num_days_btwn_strt_n_end / days_in_the_year
     return(result)
 
 class BondCalculator(object):
@@ -108,8 +112,9 @@ class BondCalculator(object):
         '''
         time to cashflow weighted by PV
         '''
-        # TODO: implement details here
-        #result =( sum(wavg) / sum(PVs))
+        PVs = np.pv(rate, num_of_periods, FV)
+        wavg = bond.index()*PVs
+        result =( sum(wavg) / sum(PVs))
 
         # end TODO
         return(result)
@@ -120,7 +125,9 @@ class BondCalculator(object):
         calculate modified duration at a certain yield yld
         '''
         D = self.calc_macaulay_duration(bond, yld)
-
+        
+        
+        
         # TODO: implement details here
         # end TODO:
         return(result)
