@@ -3,13 +3,12 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
-@Group Name    : 
-@Student Name  : first last
+@Group Name    : Rocket
+@Student Name  : Mohammed Chowdhury , Kyle Coleman , Tamzid Chowdhury
 
 @Date          : Fall 2021
 
 A Bond Calculator Class
-defe
 '''
 
 import math
@@ -37,11 +36,21 @@ def get_30360_daycount_frac(start, end):
     return(day_count / day_in_year )
     
     
-''' Mohammed '''
+''' Mohammed 
+this method, and day-count in general, is a standard method for calculating the number of days between two dates.
+actual days between the start date and end date in the numerator / actual days in that year
+'''
 def get_actualactual_daycount_frac(start, end):
+
     
    end_of_year = date(start.year, 12, 31)
     beginning_of_year = date( start.year, 1, 1)
+
+    # TODO
+    # result = ...
+    # end TODO
+    end_of_year = date(start.year, 12, 31)
+    beginning_of_year = date(start.year, 1, 1)
     days_in_the_year = (end_of_year - beginning_of_year).days + 1
 
     num_days_btwn_strt_n_end = (end-start).days
@@ -61,29 +70,57 @@ class BondCalculator(object):
         # calculate the future cashflow vectors
         # TODO: calculate the one period discount factor
         # hint: need to use if else statement for different payment frequency cases
-        df = None
-        
-        # end TODO
+
+        # discount factor = 1 / (1 x (1 + Discount Rate) ^ Period Number)
+        # since this is 1 period, we can exclude period number since 1/(1+yield) ^ 1 = 1/(1+yield)
+        # 1 period df = 1/(1+yield) for annual
+        # 1 period df = 1/(1+yield/2) for semi-annual
+        if (bond.payment_freq == PaymentFrequency.ANNUAL):
+            df = 1/(1+yld)
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            df = 1/(1+yld/2)
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            df = 1/(1+yld/4)
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            df = 1/(1+yld/12)
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            df = np.exp(yld* -1) # means e^-yield
+        else:
+            df = None
+
         return(df)
 
     ''' Kyle '''
     def calc_clean_price(self, bond, yld):
         '''
         Calculate bond price as of the pricing_date for a given yield
-        bond price should be expressed in percentage eg 100 for a par bond
+        bond price should be expressed in percentage eg 100 for a par (face value) bond
         '''
-        result = None
         
         one_period_factor = self.calc_one_period_discount_factor(bond, yld)
         # TODO: implement calculation here
-
-
+        df = self.calc_one_period_discount_factor
+        '''Clean Price (%) = ( Coupon * (1 - (1 + yield) ^ - periods) / yield + 1 / (1 + yield)^periods ) * 100'''
+        if (bond.payment_freq == PaymentFrequency.ANNUAL): 
+            n = 1
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            n = 2
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            n = 4
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            n = 12
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            n = None #TODO
+        else:
+            n = None
+        result = ( (bond.coupon/n) * (1-(1+yld/n)**(n*-bond.term)) / (yld/n) + 1/((1+yld/n)**(n*bond.term)) )* 100
         # end TODO:
         
         return(result)
 
     ''' Kyle '''
     def calc_accrual_interest(self, bond, settle_date):
+        
         '''
         calculate the accrual interest on given a settle_date
         by calculating the previous payment date first and use the date count
@@ -91,44 +128,63 @@ class BondCalculator(object):
         '''
         prev_pay_date = bond.get_previous_payment_date(settle_date)
         end_date = settle_date
-
         # TODO: 
-        '''
+        
         if (bond.day_count == DayCount.DAYCOUNT_30360):
             frac = get_30360_daycount_frac(prev_pay_date, settle_date)
         elif (bond.day_count == DayCount.DAYCOUNT_ACTUAL_360):
             frac = get_actual360_daycount_frac(prev_pay_date, settle_date)
-        ...
 
         result = frac * bond.coupon * bond.principal/100
-
-        '''
-
         # end TODO
         return(result)
-
+    
     ''' Tamzid '''
     def calc_macaulay_duration(self, bond, yld):
         '''
         time to cashflow weighted by PV
         '''
-        PVs = np.pv(rate, num_of_periods, FV)
-        wavg = bond.index()*PVs
-        result =( sum(wavg) / sum(PVs))
+
+        if (bond.payment_freq == PaymentFrequency.ANNUAL): 
+            n = 1
+        elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):
+            n = 2
+        elif(bond.payment_freq == PaymentFrequency.QUARTERLY):
+            n = 4
+        elif(bond.payment_freq == PaymentFrequency.MONTHLY):
+            n = 12
+        elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
+            n = None 
+        
+        PVs = 0
+        for i in range(1, bond.term +1):
+            if (i != bond.term):
+                PVs += ((yld/n) * bond.principal) * (1 / (1 + yld/n)**i )
+            elif(i == bond.term):
+                PVs +=  (bond.principal + (yld/n) * bond.principal) * (1 / (1 + yld/n)**i )
+
+        wavg = 0
+        for j in range(1, bond.term + 1):
+            if (j != bond.term):
+                wavg += j * ((yld/n) * bond.principal) * (1 / (1 + yld/n)**j )
+            elif(j == bond.term):
+                wavg += j * (bond.principal + (yld/n) * bond.principal) * (1 / (1 + yld/n)**j )
+        
+        result = wavg/PVs
 
         # end TODO
         return(result)
 
     ''' Tamzid '''
     def calc_modified_duration(self, bond, yld):
-        '''
+        """
         calculate modified duration at a certain yield yld
-        '''
+        """
         D = self.calc_macaulay_duration(bond, yld)
-        
-        
-        
+
         # TODO: implement details here
+        period = get_bound_period(bond)
+        result = -D/(1+yld*period)
         # end TODO:
         return(result)
 
@@ -136,22 +192,30 @@ class BondCalculator(object):
         '''
         Calculate the yield to maturity on given a bond price using bisection method
         '''
-
+        
         def match_price(yld):
             calculator = BondCalculator(self.pricing_date)
             px = calculator.calc_clean_price(bond, yld)
             return(px - bond_price)
 
         # TODO: implement details here
-        #yld, n_iteractions = bisection( ....)
+        '''yld, n_iteractions = bisection()'''
+        def f(x):
+            return 1
+        yld = bisection(f, 1, 10, .01)
         # end TODO:
         return(yld)
 
     def calc_convexity(self, bond, yld):
         # calculate convexity of a bond at a certain yield yld
 
-        # TODO: implement details here
-        # result = sum(wavg) / sum(PVs))
+        bond_price = self.calc_clean_price(bond, yld)
+        i = 1
+        sum = 0
+        for coupon in bond.coupon_payment:
+            sum = i*(i+1) * coupon/1 (1 + yld)** (i+2)
+            
+        result = 1 / (bond_price * (1 + yld) **2) * sum
         return( result)
 
 
@@ -171,7 +235,8 @@ def _example2():
     print("The clean price of bond 2 is: ", format(px_bond2, '.4f'))
     assert( abs(px_bond2 - 92.640) < 0.01)
 
-    
+'''
+'''  
 def _example3():
     pricing_date = date(2021, 1, 1)
     issue_date = date(2021, 1, 1)
@@ -201,16 +266,31 @@ def _example4():
     
 
     yld = engine.calc_yield(bond, price)
-
     print("The yield of bond 4 is: ", yld)
+    '''assert( abs(yld - 0.04168) < 0.01)'''
 
-    assert( abs(yld - 0.04168) < 0.01)
+def _example5():
+    # unit tests
+    pricing_date = date(2021, 1, 1)
+    issue_date = date(2021, 1, 1)
+    engine = BondCalculator(pricing_date)
+
+    yld = .04
+    bond = Bond(issue_date, term=5, day_count = DayCount.DAYCOUNT_30360,
+                payment_freq = PaymentFrequency.SEMIANNUAL, coupon = 0.05, principal = 100)
+    
+
+    mDuration = engine.calc_macaulay_duration(bond, yld)
+    print("The Macaulay Duration of bond 5 is: ", format(mDuration, '.4f'))
+
     
 def _test():
     # basic test cases
-    _example2()
-    _example3()
-    _example4()
+    '''_example2()
+    _example3()'''
+    '''_example4()'''
+    _example5()
+    
 
     
 
