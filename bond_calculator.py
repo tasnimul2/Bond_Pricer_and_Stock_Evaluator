@@ -199,10 +199,9 @@ class BondCalculator(object):
             return(px - bond_price)
 
         # TODO: implement details here
-        '''yld, n_iteractions = bisection()'''
         def f(x):
-            return 1
-        yld = bisection(f, 1, 10, .01)
+            return match_price(x)
+        yld = bisection(f, .00001, 1, 0.0001)
         # end TODO:
         return(yld)
 
@@ -286,9 +285,9 @@ def _example5():
     
 def _test():
     # basic test cases
-    '''_example2()
-    _example3()'''
-    '''_example4()'''
+    _example2()
+    _example3()
+    _example4()
     _example5()
     
 
