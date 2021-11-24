@@ -41,6 +41,11 @@ this method, and day-count in general, is a standard method for calculating the 
 actual days between the start date and end date in the numerator / actual days in that year
 '''
 def get_actualactual_daycount_frac(start, end):
+
+    
+   end_of_year = date(start.year, 12, 31)
+    beginning_of_year = date( start.year, 1, 1)
+
     # TODO
     # result = ...
     # end TODO
@@ -139,7 +144,6 @@ class BondCalculator(object):
         '''
         time to cashflow weighted by PV
         '''
-        # TODO: implement details here
 
         if (bond.payment_freq == PaymentFrequency.ANNUAL): 
             n = 1
@@ -173,12 +177,14 @@ class BondCalculator(object):
 
     ''' Tamzid '''
     def calc_modified_duration(self, bond, yld):
-        '''
+        """
         calculate modified duration at a certain yield yld
-        '''
+        """
         D = self.calc_macaulay_duration(bond, yld)
 
         # TODO: implement details here
+        period = get_bound_period(bond)
+        result = -D/(1+yld*period)
         # end TODO:
         return(result)
 
@@ -202,8 +208,13 @@ class BondCalculator(object):
     def calc_convexity(self, bond, yld):
         # calculate convexity of a bond at a certain yield yld
 
-        # TODO: implement details here
-        # result = sum(wavg) / sum(PVs))
+        bond_price = self.calc_clean_price(bond, yld)
+        i = 1
+        sum = 0
+        for coupon in bond.coupon_payment:
+            sum = i*(i+1) * coupon/1 (1 + yld)** (i+2)
+            
+        result = 1 / (bond_price * (1 + yld) **2) * sum
         return( result)
 
 
@@ -274,11 +285,18 @@ def _example5():
     
 def _test():
     # basic test cases
+<<<<<<< HEAD
     '''_example2()
     _example3()'''
     _example4()
     '''_example5()'''
     
+=======
+    _example2()
+    _example3()
+    _example4()
+    _example5()
+>>>>>>> 0830663438a812fb4e02998ddab1e1007fec3bdd
     
 
     
