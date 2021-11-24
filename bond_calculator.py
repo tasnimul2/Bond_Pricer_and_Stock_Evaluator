@@ -43,7 +43,7 @@ actual days between the start date and end date in the numerator / actual days i
 def get_actualactual_daycount_frac(start, end):
 
     
-   end_of_year = date(start.year, 12, 31)
+    end_of_year = date(start.year, 12, 31)
     beginning_of_year = date( start.year, 1, 1)
 
     # TODO
@@ -212,7 +212,7 @@ class BondCalculator(object):
         i = 1
         sum = 0
         for coupon in bond.coupon_payment:
-            sum = i*(i+1) * coupon/1 (1 + yld)** (i+2)
+            sum = i*(i+1) * coupon/1 * (1 + yld)** (i+2)
             
         result = 1 / (bond_price * (1 + yld) **2) * sum
         return( result)
