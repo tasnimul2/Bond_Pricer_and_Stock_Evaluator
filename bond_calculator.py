@@ -212,7 +212,7 @@ class BondCalculator(object):
         i = 1
         sum = 0
         for coupon in bond.coupon_payment:
-            sum = i*(i+1) * coupon/1 (1 + yld)** (i+2)
+            sum = i*(i+1) * coupon/1 * (1 + yld)** (i+2)
             
         result = 1 / (bond_price * (1 + yld) **2) * sum
         return( result)
