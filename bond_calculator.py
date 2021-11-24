@@ -43,7 +43,7 @@ actual days between the start date and end date in the numerator / actual days i
 def get_actualactual_daycount_frac(start, end):
 
     
-   end_of_year = date(start.year, 12, 31)
+    end_of_year = date(start.year, 12, 31)
     beginning_of_year = date( start.year, 1, 1)
 
     # TODO
@@ -286,10 +286,10 @@ def _example5():
 def _test():
     # basic test cases
 <<<<<<< HEAD
-    '''_example2()
-    _example3()'''
+    _example2()
+    _example3()
     _example4()
-    '''_example5()'''
+    _example5()
     
 =======
     _example2()
