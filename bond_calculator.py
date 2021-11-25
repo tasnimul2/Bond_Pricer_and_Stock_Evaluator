@@ -285,21 +285,15 @@ def _example5():
     
 def _test():
     # basic test cases
-<<<<<<< HEAD
     _example2()
     _example3()
     _example4()
     _example5()
-    
-=======
-    _example2()
-    _example3()
-    _example4()
-    _example5()
->>>>>>> 0830663438a812fb4e02998ddab1e1007fec3bdd
     
 
     
 
 if __name__ == "__main__":
     _test()
+
+'''ignore'''
