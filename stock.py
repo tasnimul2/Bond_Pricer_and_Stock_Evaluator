@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 
@@ -39,6 +39,14 @@ class Stock(object):
         # create a OHLCV data frame
         # self.ohlcv_df =
         #end TODO
+        
+        # get_historical_price_data() takes in only strings as paramemters. Hence, had to convert start and end date to string
+        start_date_as_str = datetime.date.isoformat(start_date);
+        end_date_as_str = datetime.date.isoformat(end_date);
+        data = self.yfinancial.get_historical_price_data(start_date_as_str, end_date_as_str, "daily")
+        self.ohlcv_df = pd.DataFrame(data)
+        return self.ohlcv_df;
+        
 
     def calc_returns(self):
         '''
@@ -54,9 +62,10 @@ class Stock(object):
         '''
         return Total debt of the company
         '''
-        result = None
-        # TODO
-        # end TODO
+        # total debt = long term liabilities (debt) + current liabilities
+        liabilities = self.yfinancial.get_total_current_liabilities()
+        debt = self.yfinancial.get_long_term_debt()
+        result =  debt + liabilities;
         return(result)
 
     '''Kyle'''
@@ -113,7 +122,6 @@ class Stock(object):
         lookup wacc by using the table in the DiscountedCashFlowModel lecture powerpoint
         '''
         result = None
-        result = self.yfinancial
         # TODO:
         #end TODO
         return(result)
@@ -126,14 +134,16 @@ def _test():
     symbol = 'AAPL'
     stock = Stock(symbol)
     print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
-    # 
-    '''start_date = datetime.date(2020, 1, 1)
+
+    start_date = datetime.date(2020, 1, 1)
     end_date = datetime.date(2021, 11, 1)
     stock.get_daily_hist_price(start_date, end_date)
     print(type(stock.ohlcv_df))
-    print(stock.ohlcv_df.head())'''
+    print(stock.ohlcv_df.head())
     #for testing
     print(f"Cash and Cash Equivalent for {symbol} is {stock.get_cash_and_cash_equivalent()}")
+
+
 
 
 if __name__ == "__main__":
