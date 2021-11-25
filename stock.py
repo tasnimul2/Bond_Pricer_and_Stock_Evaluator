@@ -65,24 +65,23 @@ class Stock(object):
         return Free Cashflow of the company
         '''
 
-        '''Free Cash Flow = Operating Cash Flow – Capital Expenditure – Net Working Capital'''
-        opf = None
-        ce = None
-        nwc = None
-        AAPL = MyYahooFinancials(self.symbol)
-        info = self.yfinancial.get_operating_cashflow
-        result = None
-        
+        '''Free Cash Flow = Operating Cash Flow – Capital Expenditure'''
+        ocf = self.yfinancial.get_operating_cashflow()
+        ce = self.yfinancial.get_capital_expenditures()    
+        result = ocf + ce
         # TODO
         # end TODO
-        return(info)
+        
+        return(result)
 
     '''Kyle'''
     def get_cash_and_cash_equivalent(self):
         '''
         Return cash and cash equivalent of the company
         '''
-        result = None
+        result = self.yfinancial.get_cash() + self.yfinancial.get_short_term_investments()
+
+
         # TODO
         # end TODO
         return(result)
@@ -114,6 +113,7 @@ class Stock(object):
         lookup wacc by using the table in the DiscountedCashFlowModel lecture powerpoint
         '''
         result = None
+        result = self.yfinancial
         # TODO:
         #end TODO
         return(result)
@@ -126,14 +126,14 @@ def _test():
     symbol = 'AAPL'
     stock = Stock(symbol)
     print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
-
     # 
     '''start_date = datetime.date(2020, 1, 1)
     end_date = datetime.date(2021, 11, 1)
     stock.get_daily_hist_price(start_date, end_date)
     print(type(stock.ohlcv_df))
     print(stock.ohlcv_df.head())'''
-
+    #for testing
+    print(f"Cash and Cash Equivalent for {symbol} is {stock.get_cash_and_cash_equivalent()}")
 
 
 if __name__ == "__main__":
