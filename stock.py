@@ -40,6 +40,14 @@ class Stock(object):
         # create a OHLCV data frame
         # self.ohlcv_df =
         #end TODO
+        
+        # get_historical_price_data() takes in only strings as paramemters. Hence, had to convert start and end date to string
+        start_date_as_str = datetime.date.isoformat(start_date);
+        end_date_as_str = datetime.date.isoformat(end_date);
+        data = self.yfinancial.get_historical_price_data(start_date_as_str, end_date_as_str, "daily")
+        self.ohlcv_df = pd.DataFrame(data)
+        return self.ohlcv_df;
+        
 
     def calc_returns(self):
         '''
@@ -55,9 +63,10 @@ class Stock(object):
         '''
         return Total debt of the company
         '''
-        result = None
-        # TODO
-        # end TODO
+        # total debt = long term liabilities (debt) + current liabilities
+        liabilities = self.yfinancial.get_total_current_liabilities()
+        debt = self.yfinancial.get_long_term_debt()
+        result =  debt + liabilities;
         return(result)
 
     '''Kyle'''
