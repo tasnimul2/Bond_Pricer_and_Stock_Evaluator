@@ -1,10 +1,9 @@
+
 '''
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 @Student Name  : 
 @Date          : Nov 2021
-
-
 '''
 import enum
 import calendar
