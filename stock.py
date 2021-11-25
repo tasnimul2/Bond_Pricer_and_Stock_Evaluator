@@ -135,8 +135,6 @@ def _test():
     stock.get_daily_hist_price(start_date, end_date)
     print(type(stock.ohlcv_df))
     print(stock.ohlcv_df.head())
-    # my changes to see if my methods work :
-    print("total debt: ",stock.get_total_debt())
 
 
 
