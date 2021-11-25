@@ -183,7 +183,7 @@ class BondCalculator(object):
         D = self.calc_macaulay_duration(bond, yld)
 
         # TODO: implement details here
-        period = get_bound_period(bond)
+        period = self.get_bound_period(bond)
         result = -D/(1+yld*period)
         # end TODO:
         return(result)
@@ -295,3 +295,5 @@ def _test():
 
 if __name__ == "__main__":
     _test()
+
+'''ignore'''

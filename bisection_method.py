@@ -30,8 +30,8 @@ def f(x):
     return x**2 - 9
 
 def test():
-    a = 0;   b = 1000
-    solution, no_iterations = bisection(f, a, b, eps=1.0e-6)
+    a = 0;   b = 6
+    solution, no_iterations = bisection(f, a, b, eps=0)
     print("Number of function calls: {}".format(1 + 2*no_iterations))
     print("A solution is: {}".format(solution))
 
