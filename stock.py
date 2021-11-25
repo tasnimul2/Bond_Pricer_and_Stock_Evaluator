@@ -3,7 +3,6 @@
 @Instructor    : Dr. Alex Pang
 
 @Student Name  : Mohammed Chowdhury , Kyle Coleman, Tamzid Chowdhury
-
 @Date          : Nov 2021
 
 
@@ -14,12 +13,11 @@ import math
 import pandas as pd
 import numpy as np
 
-import datetime 
+import datetime
 from scipy.stats import norm
 
 from math import log, exp, sqrt
-
-from utils import MyYahooFinancials 
+from utils import MyYahooFinancials
 
 class Stock(object):
     '''
@@ -32,7 +30,7 @@ class Stock(object):
         self.dividend_yield = dividend_yield
         self.yfinancial = MyYahooFinancials(symbol, freq)
         self.ohlcv_df = None
-        
+
     '''Mohammed'''
     def get_daily_hist_price(self, start_date, end_date):
         '''
@@ -43,7 +41,7 @@ class Stock(object):
         # create a OHLCV data frame
         # self.ohlcv_df =
         #end TODO
-        
+
     def calc_returns(self):
         '''
         '''
@@ -62,7 +60,7 @@ class Stock(object):
         # TODO
         # end TODO
         return(result)
-    
+
     '''Kyle'''
     def get_free_cashflow(self):
         '''
@@ -72,7 +70,7 @@ class Stock(object):
         # TODO
         # end TODO
         return(result)
-    
+
     '''Kyle'''
     def get_cash_and_cash_equivalent(self):
         '''
@@ -82,16 +80,17 @@ class Stock(object):
         # TODO
         # end TODO
         return(result)
-    
+
     '''Tamzid'''
     def get_num_shares_outstanding(self):
         '''
         get current number of shares outstanding from Yahoo financial library
         '''
         result = None
-        # TODO
-        # end TODO
-        return(result)
+
+        #result = self.yfinancial.get_num_shares_outstanding(price_type='current')
+
+        print(result)
 
     '''Tamzid'''
     def get_beta(self):
@@ -113,24 +112,21 @@ class Stock(object):
         # TODO:
         #end TODO
         return(result)
-        
+
+    def _test():
+        # a few basic unit tests
+        symbol = 'AAPL'
+        stock = Stock(symbol)
+        print("Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
+
+        #
+        start_date = datetime.date(2020, 1, 1)
+        end_date = datetime.date(2021, 11, 1)
+        stock.get_daily_hist_price(start_date, end_date)
+        print(type(stock.ohlcv_df))
+        print(stock.ohlcv_df.head())
+        #print(get_num_shares_outstanding)
 
 
-
-def _test():
-    # a few basic unit tests
-    symbol = 'AAPL'
-    stock = Stock(symbol)
-    print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
-
-    # 
-    start_date = datetime.date(2020, 1, 1)
-    end_date = datetime.date(2021, 11, 1)
-    stock.get_daily_hist_price(start_date, end_date)
-    print(type(stock.ohlcv_df))
-    print(stock.ohlcv_df.head())
-
-
-
-if __name__ == "__main__":
-    _test()
+    if __name__ == "__main__":
+        _test()
