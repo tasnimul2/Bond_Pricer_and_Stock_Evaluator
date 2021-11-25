@@ -85,6 +85,7 @@ class Stock(object):
         '''
         get current number of shares outstanding from Yahoo financial library
         '''
+        '''starting code to my development branch'''
         result = None
         # TODO
         # end TODO
