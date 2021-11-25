@@ -1,9 +1,7 @@
 '''
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
-
-@Student Name  : Mohammed Chowdhury , Kyle Coleman, Tamzid Chowdhury
-
+@Student Name  : 
 @Date          : Nov 2021
 
 
@@ -32,7 +30,7 @@ class Stock(object):
         self.dividend_yield = dividend_yield
         self.yfinancial = MyYahooFinancials(symbol, freq)
         self.ohlcv_df = None
-        
+
     '''Mohammed'''
     def get_daily_hist_price(self, start_date, end_date):
         '''
@@ -43,7 +41,7 @@ class Stock(object):
         # create a OHLCV data frame
         # self.ohlcv_df =
         #end TODO
-        
+
     def calc_returns(self):
         '''
         '''
@@ -62,7 +60,7 @@ class Stock(object):
         # TODO
         # end TODO
         return(result)
-    
+
     '''Kyle'''
     def get_free_cashflow(self):
         '''
@@ -72,7 +70,7 @@ class Stock(object):
         # TODO
         # end TODO
         return(result)
-    
+
     '''Kyle'''
     def get_cash_and_cash_equivalent(self):
         '''
@@ -82,7 +80,7 @@ class Stock(object):
         # TODO
         # end TODO
         return(result)
-    
+
     '''Tamzid'''
     def get_num_shares_outstanding(self):
         '''
@@ -113,7 +111,7 @@ class Stock(object):
         # TODO:
         #end TODO
         return(result)
-        
+
 
 
 
