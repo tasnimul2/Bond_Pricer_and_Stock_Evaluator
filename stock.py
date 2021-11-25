@@ -2,7 +2,15 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
+<<<<<<< HEAD
+@Student Name  :
+=======
 @Student Name  : Mohammed Chowdhury , Kyle Coleman, Tamzid Chowdhury
+<<<<<<< HEAD
+=======
+>>>>>>> 3853e6c53e923e7a36beabb1842eaf447aa90018
+
+>>>>>>> a6fa63b8da890e5d5b68fb0e48646c6dcf61c5ec
 @Date          : Nov 2021
 
 
@@ -88,7 +96,11 @@ class Stock(object):
         '''
         result = None
 
+<<<<<<< HEAD
         #result = self.yfinancial.get_num_shares_outstanding(price_type='current')
+=======
+        result = self.yfinancial.get_num_shares_outstanding(price_type='current')
+>>>>>>> a6fa63b8da890e5d5b68fb0e48646c6dcf61c5ec
 
         print(result)
 
@@ -99,7 +111,7 @@ class Stock(object):
         '''
         result = None
         # TODO
-        #result = self.yfinancial.get_beta()
+        result = self.yfinancial.get_beta()
         # end TODO
         return(result)
 
@@ -116,8 +128,13 @@ class Stock(object):
     def _test():
         # a few basic unit tests
         symbol = 'AAPL'
+<<<<<<< HEAD
         stock = Stock(symbol)
         print("Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
+=======
+        stock = Stock('AAPL')
+        print(f"Free Cash Flow for AAPL is {stock.get_free_cashflow()}")
+>>>>>>> a6fa63b8da890e5d5b68fb0e48646c6dcf61c5ec
 
         #
         start_date = datetime.date(2020, 1, 1)
@@ -125,7 +142,11 @@ class Stock(object):
         stock.get_daily_hist_price(start_date, end_date)
         print(type(stock.ohlcv_df))
         print(stock.ohlcv_df.head())
+<<<<<<< HEAD
         #print(get_num_shares_outstanding)
+=======
+        print(get_num_shares_outstanding)
+>>>>>>> a6fa63b8da890e5d5b68fb0e48646c6dcf61c5ec
 
 
     if __name__ == "__main__":
