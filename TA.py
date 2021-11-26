@@ -116,7 +116,7 @@ class VWAP(object):
         '''
         calculate VWAP
         '''
-        #TODO: implement details here
+        #TODO: implement details here 
         #end TODO
 
 
