@@ -183,6 +183,7 @@ class BondCalculator(object):
         D = self.calc_macaulay_duration(bond, yld)
 
         # TODO: implement details here
+
         if self.payment_freq == PaymentFrequency.ANNUAL:
             period = 1
         elif self.payment_freq == PaymentFrequency.SEMIANNUAL:
@@ -305,3 +306,5 @@ def _test():
 
 if __name__ == "__main__":
     _test()
+
+'''ignore'''

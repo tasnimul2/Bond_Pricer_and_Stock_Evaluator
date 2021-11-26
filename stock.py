@@ -1,4 +1,3 @@
-
 '''
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
@@ -40,6 +39,14 @@ class Stock(object):
         # create a OHLCV data frame
         # self.ohlcv_df =
         #end TODO
+        
+        # get_historical_price_data() takes in only strings as paramemters. Hence, had to convert start and end date to string
+        start_date_as_str = datetime.date.isoformat(start_date);
+        end_date_as_str = datetime.date.isoformat(end_date);
+        data = self.yfinancial.get_historical_price_data(start_date_as_str, end_date_as_str, "daily")
+        self.ohlcv_df = pd.DataFrame(data)
+        return self.ohlcv_df;
+        
 
     def calc_returns(self):
         '''
@@ -55,9 +62,10 @@ class Stock(object):
         '''
         return Total debt of the company
         '''
-        result = None
-        # TODO
-        # end TODO
+        # total debt = long term liabilities (debt) + current liabilities
+        liabilities = self.yfinancial.get_total_current_liabilities()
+        debt = self.yfinancial.get_long_term_debt()
+        result =  debt + liabilities;
         return(result)
 
     '''Kyle'''
@@ -65,9 +73,11 @@ class Stock(object):
         '''
         return Free Cashflow of the company
         '''
-        result = None
-        # TODO
-        # end TODO
+
+        '''Free Cash Flow = Operating Cash Flow – Capital Expenditure'''
+        ocf = self.yfinancial.get_operating_cashflow()
+        ce = self.yfinancial.get_capital_expenditures()    
+        result = ocf + ce
         return(result)
 
     '''Kyle'''
@@ -75,17 +85,14 @@ class Stock(object):
         '''
         Return cash and cash equivalent of the company
         '''
-        result = None
-        # TODO
-        # end TODO
+        result = self.yfinancial.get_cash() + self.yfinancial.get_short_term_investments()
         return(result)
 
-    '''Tamzid'''
+      '''Tamzid'''
     def get_num_shares_outstanding(self):
         '''
         get current number of shares outstanding from Yahoo financial library
         '''
-        '''starting code to my development branch'''
         result = self.yfinancial.get_num_shares_outstanding()
         return(result)
 
@@ -116,16 +123,19 @@ def _test():
     stock = Stock(symbol)
     print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
 
-    
     start_date = datetime.date(2020, 1, 1)
     end_date = datetime.date(2021, 11, 1)
     stock.get_daily_hist_price(start_date, end_date)
     print(type(stock.ohlcv_df))
     print(stock.ohlcv_df.head())
-
-    #My Test Cases
+    #for testing
+    print(f"The total debt is: {stock.get_total_debt()}")
+    print(f"Cash and Cash Equivalent for {symbol} is {stock.get_cash_and_cash_equivalent()}")
     print(f"Total shares outstanding {stock.get_num_shares_outstanding()}")
     print(f"The beta is: {stock.get_beta()}")
+
+
+
 
 if __name__ == "__main__":
     _test()
