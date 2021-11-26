@@ -86,7 +86,7 @@ class Stock(object):
         get current number of shares outstanding from Yahoo financial library
         '''
         '''starting code to my development branch'''
-        result = None
+        result = self.yfinancial.get_num_shares_outstanding()
         # TODO
         # end TODO
         return(result)
@@ -96,9 +96,10 @@ class Stock(object):
         '''
         get beta from Yahoo financial
         '''
-        result = None
+
         # TODO
-        #result = self.yfinancial.get_beta()
+        #cov = self.yfinancial.cov()
+        result = self.yfinancial.get_beta()
         # end TODO
         return(result)
 
@@ -121,14 +122,16 @@ def _test():
     stock = Stock(symbol)
     print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
 
-    # 
+    
     start_date = datetime.date(2020, 1, 1)
     end_date = datetime.date(2021, 11, 1)
     stock.get_daily_hist_price(start_date, end_date)
     print(type(stock.ohlcv_df))
     print(stock.ohlcv_df.head())
 
-
+    #My Test Cases
+    print(f"Total shares outstanding {stock.get_num_shares_outstanding()}")
+    print(f"The beta is: {stock.get_beta()}")
 
 if __name__ == "__main__":
     _test()
