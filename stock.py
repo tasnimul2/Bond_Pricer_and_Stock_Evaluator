@@ -78,9 +78,6 @@ class Stock(object):
         ocf = self.yfinancial.get_operating_cashflow()
         ce = self.yfinancial.get_capital_expenditures()    
         result = ocf + ce
-        # TODO
-        # end TODO
-        
         return(result)
 
     '''Kyle'''
@@ -89,10 +86,6 @@ class Stock(object):
         Return cash and cash equivalent of the company
         '''
         result = self.yfinancial.get_cash() + self.yfinancial.get_short_term_investments()
-
-
-        # TODO
-        # end TODO
         return(result)
 
     '''Tamzid'''
@@ -100,9 +93,7 @@ class Stock(object):
         '''
         get current number of shares outstanding from Yahoo financial library
         '''
-        result = None
-        # TODO
-        # end TODO
+        result = self.yfinancial.get_num_shares_outstanding()
         return(result)
 
     '''Tamzid'''
@@ -110,10 +101,7 @@ class Stock(object):
         '''
         get beta from Yahoo financial
         '''
-        result = None
-        # TODO
-        #result = self.yfinancial.get_beta()
-        # end TODO
+        result = self.yfinancial.get_beta()
         return(result)
 
     '''whoever has time , please do this :) '''
@@ -141,7 +129,11 @@ def _test():
     print(type(stock.ohlcv_df))
     print(stock.ohlcv_df.head())
     #for testing
+    print(f"The total debt is: {stock.get_total_debt()}")
     print(f"Cash and Cash Equivalent for {symbol} is {stock.get_cash_and_cash_equivalent()}")
+    print(f"Total shares outstanding {stock.get_num_shares_outstanding()}")
+    print(f"The beta is: {stock.get_beta()}")
+
 
 
 
