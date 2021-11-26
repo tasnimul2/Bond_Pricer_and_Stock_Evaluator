@@ -87,8 +87,6 @@ class Stock(object):
         '''
         '''starting code to my development branch'''
         result = self.yfinancial.get_num_shares_outstanding()
-        # TODO
-        # end TODO
         return(result)
 
     '''Tamzid'''
@@ -96,11 +94,7 @@ class Stock(object):
         '''
         get beta from Yahoo financial
         '''
-
-        # TODO
-        #cov = self.yfinancial.cov()
         result = self.yfinancial.get_beta()
-        # end TODO
         return(result)
 
     '''whoever has time , please do this :) '''
