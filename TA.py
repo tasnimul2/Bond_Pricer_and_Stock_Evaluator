@@ -22,6 +22,7 @@ from math import log, exp, sqrt
 
 from stock import *
 
+'''Mohammed'''
 class SimpleMovingAverages(object):
     '''
     On given a OHLCV data frame, calculate corresponding simple moving averages
@@ -52,7 +53,7 @@ class SimpleMovingAverages(object):
     def get_series(self, period):
         return(self._sma[period])
 
-    
+'''Tamzid'''
 class ExponentialMovingAverages(object):
     '''
     On given a OHLCV data frame, calculate corresponding simple moving averages
@@ -82,7 +83,7 @@ class ExponentialMovingAverages(object):
     def get_series(self, period):
         return(self._ema[period])
 
-
+'''Tamzid'''
 class RSI(object):
 
     def __init__(self, ohlcv_df, period = 14):
@@ -100,7 +101,8 @@ class RSI(object):
         #TODO: implement details here
         # self.rsi = ...
         #end TODO
-
+        
+'''Kyle'''
 class VWAP(object):
 
     def __init__(self, ohlcv_df):

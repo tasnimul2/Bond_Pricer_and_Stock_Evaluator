@@ -104,7 +104,7 @@ class Stock(object):
         result = self.yfinancial.get_beta()
         return(result)
 
-    '''whoever has time , please do this :) '''
+    '''kyle'''
     def lookup_wacc_by_beta(self, beta):
         '''
         lookup wacc by using the table in the DiscountedCashFlowModel lecture powerpoint
