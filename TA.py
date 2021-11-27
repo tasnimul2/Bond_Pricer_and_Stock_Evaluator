@@ -41,6 +41,23 @@ class SimpleMovingAverages(object):
         result = None
         #TODO
         #end TODO
+        #period is a list of numbers 
+        # price_source is the time during the day that the price comes from (ie. closing / opening price  etc)
+        # there is only one column for the data frame, [the stock ticker]
+        #self.ohlcv_df['AAPL']
+        print("------------------")
+        #print(self.ohlcv_df.iloc[[0,1,2,3,4,5,6]]) # self.ohlcv_df.iloc[4] is prices. [this code prints rows]
+        '''the following code means that in the row 'prices' of the dataframe, get the data from the 0th colmn 
+         and set it to listOfPriceDicts . Note that this dataframe has a single column named AAPL, which can be accessed 
+         by printing 'self.ohlcv_df['AAPL']' or print(self.ohlcv_df). Hence df.loc['prices].values[0] mean get prices from AAPL :
+        '''
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
+        source = price_source
+        # print(period)
+        
+        for priceDict in listOfPriceDicts:
+            print(priceDict.get(source))
+        
         return(result)
         
     def run(self, price_source = 'close'):
