@@ -38,14 +38,13 @@ class SimpleMovingAverages(object):
         for a given period, calc the SMA as a pandas series from the price_source
         which can be  open, high, low or close
         '''
-        result = None
+        
         #TODO
         #end TODO
         #period is a list of numbers 
         # price_source is the time during the day that the price comes from (ie. closing / opening price  etc)
         # there is only one column for the data frame, [the stock ticker]
         #self.ohlcv_df['AAPL']
-        print("------------------")
         #print(self.ohlcv_df.iloc[[0,1,2,3,4,5,6]]) # self.ohlcv_df.iloc[4] is prices. [this code prints rows]
         '''the following code means that in the row 'prices' of the dataframe, get the data from the 0th colmn 
          and set it to listOfPriceDicts . Note that this dataframe has a single column named AAPL, which can be accessed 
@@ -53,11 +52,21 @@ class SimpleMovingAverages(object):
         '''
         listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
         source = price_source
-        # print(period)
+        givenPeriod = period
+        pricesList = []
         
         for priceDict in listOfPriceDicts:
-            print(priceDict.get(source))
+             pricesList.append(priceDict.get(source))
         
+        ''' Now that we have a list with all the prices, we now need to perform a linear convolution to get the SMA.
+        to do linear convolution, we will need 2 lists. The first list, we will call weights , the second list is the PriceList
+        with all the prices of the given price_source. This youtube tutorial teaches linear convolution :
+        https://www.youtube.com/watch?v=TrgfP7QD3Nk 
+        when doing np.concolve, it is simply doing linear convolution under the hood'''
+        
+        weights = np.repeat(1.0/givenPeriod,givenPeriod) # this will return a np array of size givenPeriod, with value 1.0/givenPeriod
+        sma = np.convolve(pricesList,weights,'valid') # this will perfrom a linear convolution to get the SMA, and return it as numpy array
+        result = pd.Series(sma)
         return(result)
         
     def run(self, price_source = 'close'):
@@ -70,7 +79,7 @@ class SimpleMovingAverages(object):
     def get_series(self, period):
         return(self._sma[period])
 
-'''Tamzid'''
+'''Mohammed'''
 class ExponentialMovingAverages(object):
     '''
     On given a OHLCV data frame, calculate corresponding simple moving averages
