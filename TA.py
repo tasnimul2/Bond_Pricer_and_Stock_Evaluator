@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from datetime import date
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
@@ -43,9 +43,9 @@ class SimpleMovingAverages(object):
         #end TODO
         #period is a list of numbers 
         # price_source is the time during the day that the price comes from (ie. closing / opening price  etc)
-        # there is only one column for the data frame, [the stock ticker]
-        #self.ohlcv_df['AAPL']
-        #print(self.ohlcv_df.iloc[[0,1,2,3,4,5,6]]) # self.ohlcv_df.iloc[4] is prices. [this code prints rows]
+        # there is only one column for the data frame, [the stock ticker] ie . self.ohlcv_df['AAPL']
+        #doing self.ohlcv_df.iloc[4] is prices (ie. it is the 4th row i nthe daya frame ). [iloc prints rows]
+        
         '''the following code means that in the row 'prices' of the dataframe, get the data from the 0th colmn 
          and set it to listOfPriceDicts . Note that this dataframe has a single column named AAPL, which can be accessed 
          by printing 'self.ohlcv_df['AAPL']' or print(self.ohlcv_df). 
@@ -149,7 +149,6 @@ class RSI(object):
         
 '''Kyle'''
 class VWAP(object):
-
     def __init__(self, ohlcv_df):
         self.ohlcv_df = ohlcv_df
         self.vwap = None
@@ -161,8 +160,18 @@ class VWAP(object):
         '''
         calculate VWAP
         '''
-        #TODO: implement details here
-        #end TODO
+      
+        endday = len(self.ohlcv_df.loc['prices'].values[0]) - 1 #length of dictionary to find the last day
+        startday = endday - 9
+        totalVolume = 0
+        totalPriceVolume = 0
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0]
+        for v in range(startday+1, endday+1):
+            totalVolume += listOfPriceDicts[v]['volume']
+        for pv in range(startday+1, endday+1):
+            totalPriceVolume += listOfPriceDicts[pv]['close'] * listOfPriceDicts[pv]['volume']
+        self.vwap = totalPriceVolume / totalVolume
+        
 
 
 
@@ -187,12 +196,19 @@ def _test():
 
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")
     
-    # my tests:
+    # mo tests:
     ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
     ema.run()
     s2 = ema.get_series(9)
     print(s2.index)
     print(s2)
+    
+    # kyle tets
+    vwap_indicator = VWAP(stock.ohlcv_df)
+    vwap_indicator.run()
+    print(f"VWAP for {symbol} in the last {periods[0]} days is {vwap_indicator.vwap}")
+    
+    
 if __name__ == "__main__":
     _test()
 
