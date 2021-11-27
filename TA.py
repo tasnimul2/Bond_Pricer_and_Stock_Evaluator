@@ -48,13 +48,13 @@ class SimpleMovingAverages(object):
         #print(self.ohlcv_df.iloc[[0,1,2,3,4,5,6]]) # self.ohlcv_df.iloc[4] is prices. [this code prints rows]
         '''the following code means that in the row 'prices' of the dataframe, get the data from the 0th colmn 
          and set it to listOfPriceDicts . Note that this dataframe has a single column named AAPL, which can be accessed 
-         by printing 'self.ohlcv_df['AAPL']' or print(self.ohlcv_df). Hence df.loc['prices].values[0] mean get prices from AAPL :
+         by printing 'self.ohlcv_df['AAPL']' or print(self.ohlcv_df). 
+         Hence df.loc['prices].values[0] means get 'prices' (row) from 'AAPL' or 0th (col) :
         '''
         listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
         source = price_source
         givenPeriod = period
         pricesList = []
-        
         for priceDict in listOfPriceDicts:
              pricesList.append(priceDict.get(source))
         
@@ -62,7 +62,7 @@ class SimpleMovingAverages(object):
         to do linear convolution, we will need 2 lists. The first list, we will call weights , the second list is the PriceList
         with all the prices of the given price_source. This youtube tutorial teaches linear convolution :
         https://www.youtube.com/watch?v=TrgfP7QD3Nk 
-        when doing np.concolve, it is simply doing linear convolution under the hood'''
+        when doing np.convolve, it is simply doing linear convolution under the hood, given 2 lists'''
         
         weights = np.repeat(1.0/givenPeriod,givenPeriod) # this will return a np array of size givenPeriod, with value 1.0/givenPeriod
         sma = np.convolve(pricesList,weights,'valid') # this will perfrom a linear convolution to get the SMA, and return it as numpy array
@@ -92,16 +92,35 @@ class ExponentialMovingAverages(object):
 
     def _calc(self, period):
         '''
-        for a given period, calc the SMA as a pandas series
+        for a given period, calc the EMA as a pandas series
         '''
-        result = None
         #TODO: implement details here
         #end TODO
+        ''' extract the closing price data and put it into a list'''
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
+        source = 'close'
+        givenPeriod = period
+        pricesList = []
+        for priceDict in listOfPriceDicts:
+             pricesList.append(priceDict.get(source))
+        
+        '''
+        #np.linspace creates an numpy array of numbers ranging between -1 and 0 ie. array of size 3 consisiting [-1.0,-0.5,0]
+        #np.exp takes each element in that array and takes it to the power of e. [e^-1.0,e^-0.5,e^0] = [0.36,0.60,1.0]
+        this list is set to a variable called 'weights' , as it is the weight put on priceList to get moving average.
+        #then take all of the values in weights , and divide each element in weights by the sum of all values in weights.
+        with the adjusted values in weights, calcuate the moving average (using linear convultion) and set it to variable 'ema'
+        '''
+        weights = np.exp(np.linspace(-1.0,0.0,givenPeriod))
+        weights /= weights.sum()
+        ema = np.convolve(pricesList,weights,'valid') #calculate moving average, using linear convolution
+        ema[:givenPeriod] = ema[givenPeriod] # this will repeat the first 'givenPeriod' elements in the list
+        result = pd.Series(ema)
         return(result)
         
     def run(self):
         '''
-        Calculate all the simple moving averages as a dict
+        Calculate all the Exponential moving averages as a dict
         '''
         for period in self.periods:
             self._ema[period] = self._calc(period)
@@ -168,7 +187,12 @@ def _test():
 
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")
     
-
+    # my tests:
+    ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
+    ema.run()
+    s2 = ema.get_series(9)
+    print(s2.index)
+    print(s2)
 if __name__ == "__main__":
     _test()
 
