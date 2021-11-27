@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from datetime import date
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
@@ -41,6 +41,23 @@ class SimpleMovingAverages(object):
         result = None
         #TODO
         #end TODO
+        #period is a list of numbers 
+        # price_source is the time during the day that the price comes from (ie. closing / opening price  etc)
+        # there is only one column for the data frame, [the stock ticker]
+        #self.ohlcv_df['AAPL']
+        print("------------------")
+        #print(self.ohlcv_df.iloc[[0,1,2,3,4,5,6]]) # self.ohlcv_df.iloc[4] is prices. [this code prints rows]
+        '''the following code means that in the row 'prices' of the dataframe, get the data from the 0th colmn 
+         and set it to listOfPriceDicts . Note that this dataframe has a single column named AAPL, which can be accessed 
+         by printing 'self.ohlcv_df['AAPL']' or print(self.ohlcv_df). Hence df.loc['prices].values[0] mean get prices from AAPL :
+        '''
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0]
+        source = price_source
+        # print(period)
+        
+        for priceDict in listOfPriceDicts:
+            print(priceDict.get(source))
+        
         return(result)
         
     def run(self, price_source = 'close'):
@@ -52,36 +69,6 @@ class SimpleMovingAverages(object):
     
     def get_series(self, period):
         return(self._sma[period])
-
-'''Tamzid'''
-class ExponentialMovingAverages(object):
-    '''
-    On given a OHLCV data frame, calculate corresponding simple moving averages
-    '''
-    def __init__(self, ohlcv_df, periods):
-        #
-        self.ohlcv_df = ohlcv_df
-        self.periods = periods
-        self._ema = {}
-
-    def _calc(self, period):
-        '''
-        for a given period, calc the SMA as a pandas series
-        '''
-        result = None
-        #TODO: implement details here
-        #end TODO
-        return(result)
-        
-    def run(self):
-        '''
-        Calculate all the simple moving averages as a dict
-        '''
-        for period in self.periods:
-            self._ema[period] = self._calc(period)
-
-    def get_series(self, period):
-        return(self._ema[period])
 
 '''Tamzid'''
 class RSI(object):
@@ -104,12 +91,13 @@ class RSI(object):
         
 '''Kyle'''
 class VWAP(object):
-
+    i = None
     def __init__(self, ohlcv_df):
         self.ohlcv_df = ohlcv_df
         self.vwap = None
 
     def get_series(self):
+        i = self.vwap
         return(self.vwap)
 
     def run(self):
@@ -117,6 +105,17 @@ class VWAP(object):
         calculate VWAP
         '''
         #TODO: implement details here
+        endday = len(self.ohlcv_df.loc['prices'].values[0]) - 1
+        startday = endday - 5
+        totalVolume = 0
+        totalPriceVolume = 0
+        volume = self.ohlcv_df.loc['prices'].values[0][endday]['volume']
+        for v in range(startday, endday+1):
+            totalVolume += self.ohlcv_df.loc['prices'].values[0][v]['volume']
+        for pv in range(startday, endday+1):
+            totalPriceVolume += self.ohlcv_df.loc['prices'].values[0][pv]['close'] * self.ohlcv_df.loc['prices'].values[0][pv]['volume']
+        self.vwap = totalPriceVolume / totalVolume
+        '''self.vwap = self.ohlcv_df.loc['prices'].values[0][0]['close']'''
         #end TODO
 
 
@@ -130,7 +129,7 @@ def _test():
 
     stock.get_daily_hist_price(start_date, end_date)
 
-    periods = [9, 20, 50, 100, 200]
+    '''periods = [9, 20, 50, 100, 200]
     smas = SimpleMovingAverages(stock.ohlcv_df, periods)
     smas.run()
     s1 = smas.get_series(9)
@@ -140,7 +139,10 @@ def _test():
     rsi_indicator = RSI(stock.ohlcv_df)
     rsi_indicator.run()
 
-    print(f"RSI for {symbol} is {rsi_indicator.rsi}")
+    print(f"RSI for {symbol} is {rsi_indicator.rsi}")'''
+    vwap_indicator = VWAP(stock.ohlcv_df)
+    vwap_indicator.run()
+    print(f"VWAP for {symbol} in the last 5 days is {vwap_indicator.vwap}")
     
 
 if __name__ == "__main__":
