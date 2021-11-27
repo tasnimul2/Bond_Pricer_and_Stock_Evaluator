@@ -105,15 +105,15 @@ class VWAP(object):
         calculate VWAP
         '''
         #TODO: implement details here
-        endday = len(self.ohlcv_df.loc['prices'].values[0]) - 1
-        startday = endday - 5
+        endday = len(self.ohlcv_df.loc['prices'].values[0]) - 1 #length of dictionary to find the last day
+        startday = endday - 9
         totalVolume = 0
         totalPriceVolume = 0
-        volume = self.ohlcv_df.loc['prices'].values[0][endday]['volume']
-        for v in range(startday, endday+1):
-            totalVolume += self.ohlcv_df.loc['prices'].values[0][v]['volume']
-        for pv in range(startday, endday+1):
-            totalPriceVolume += self.ohlcv_df.loc['prices'].values[0][pv]['close'] * self.ohlcv_df.loc['prices'].values[0][pv]['volume']
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0]
+        for v in range(startday+1, endday+1):
+            totalVolume += listOfPriceDicts[v]['volume']
+        for pv in range(startday+1, endday+1):
+            totalPriceVolume += listOfPriceDicts[pv]['close'] * listOfPriceDicts[pv]['volume']
         self.vwap = totalPriceVolume / totalVolume
         '''self.vwap = self.ohlcv_df.loc['prices'].values[0][0]['close']'''
         #end TODO
@@ -129,8 +129,8 @@ def _test():
 
     stock.get_daily_hist_price(start_date, end_date)
 
-    '''periods = [9, 20, 50, 100, 200]
-    smas = SimpleMovingAverages(stock.ohlcv_df, periods)
+    periods = [9, 20, 50, 100, 200]
+    '''smas = SimpleMovingAverages(stock.ohlcv_df, periods)
     smas.run()
     s1 = smas.get_series(9)
     print(s1.index)
@@ -142,7 +142,7 @@ def _test():
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")'''
     vwap_indicator = VWAP(stock.ohlcv_df)
     vwap_indicator.run()
-    print(f"VWAP for {symbol} in the last 5 days is {vwap_indicator.vwap}")
+    print(f"VWAP for {symbol} in the last {periods[0]} days is {vwap_indicator.vwap}")
     
 
 if __name__ == "__main__":
