@@ -68,8 +68,7 @@ class ExponentialMovingAverages(object):
         '''
         for a given period, calc the SMA as a pandas series
         '''
-        result = None
-        #TODO: implement details here
+
         #end TODO
         return(result)
         
@@ -98,9 +97,23 @@ class RSI(object):
         '''
         calculate RSI
         '''
-        #TODO: implement details here
-        # self.rsi = ...
-        #end TODO
+    
+        diff = self._close.diff(1)
+        up_direction = diff.where(diff > 0, 0.0)
+        down_direction = -diff.where(diff < 0, 0.0)
+        min_periods = 0 if self._fillna else self._window
+        emaup = up_direction.ewm(
+            alpha=1 / self._window, min_periods=min_periods, adjust=False
+        ).mean()
+        emadn = down_direction.ewm(
+            alpha=1 / self._window, min_periods=min_periods, adjust=False
+        ).mean()
+        relative_strength = emaup / emadn
+        self._rsi = pd.Series(
+            np.where(emadn == 0, 100, 100 - (100 / (1 + relative_strength))),
+            index=self._close.index,
+        )
+
         
 '''Kyle'''
 class VWAP(object):
@@ -141,7 +154,9 @@ def _test():
     rsi_indicator.run()
 
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")
-    
+    #My test cases
+    print(f"The EMA is: {ExponentialMovingAverages._calc()}")
+    print(f"The RSI is: {RSI.run()}")
 
 if __name__ == "__main__":
     _test()
