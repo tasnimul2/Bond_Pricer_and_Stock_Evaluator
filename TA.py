@@ -8,6 +8,7 @@ Technical Indicators
 import enum
 import calendar
 import math
+from typing import List
 import pandas as pd
 import numpy as np
 
@@ -91,7 +92,8 @@ class ExponentialMovingAverages(object):
         for a given period, calc the SMA as a pandas series
         '''
 
-        #end TODO
+        #end TODO\
+        result = None
         return(result)
         
     def run(self):
@@ -120,31 +122,32 @@ class RSI(object):
         '''
         calculate RSI
         '''
-        deltas = 
-        seed = deltas[:self.period+1]
-        up = seed[seed > 0].sum()/self.period
-        down = -seed[seed < 0].sum()/self.period
-        rs = up/down if down !=0 else 0
-        rsi = np.zeros_like(self.ohlcv_df)
-        rsi[:self.period] = 100. - 100./(1.+rs)
+        day_lows = []
+        day_highs = []
+        list_of_dict = self.ohlcv_df.loc['prices'].values[0]
+        
+        for priceDict in list_of_dict:
+            day_highs.append(priceDict.get('high'))
+            day_lows.append(priceDict.get('low'))
 
-        for i in range(self.period, len(self.ohlcv_df)):
-            delta = deltas[i-1]  # The diff is 1 shorter
+        sum =0
+        for x in day_highs: 
+            sum = sum+x
 
-            if delta > 0:
-                upval = delta
-                downval = 0.
-            else:
-                upval = 0.
-                downval = -delta
+        avg_gain = sum/len(day_highs)
 
-            up = (up*(self.period-1) + upval)/self.period
-            down = (down*(self.period-1) + downval)/self.period
+        sum =0
+        for x in day_lows: 
+            sum = sum+x
 
-            rs = up/down
-            rsi[i] = 100. - 100./(1.+rs)
+        avg_loss = sum/len(day_lows)
+        
+        print(avg_gain)
+        print(avg_loss)
+        rs = avg_gain / avg_loss
 
-        return rsi
+        self.rsi = 100 - (100/(1+rs))
+        return(self.rsi)
 
         
 '''Kyle'''
@@ -184,8 +187,8 @@ def _test():
 
     stock.get_daily_hist_price(start_date, end_date)
 
-    '''periods = [9, 20, 50, 100, 200]
-    smas = SimpleMovingAverages(stock.ohlcv_df, periods)
+    periods = [9, 20, 50, 100, 200]
+    '''smas = SimpleMovingAverages(stock.ohlcv_df, periods)
     smas.run()
     s1 = smas.get_series(9)
     print(s1.index)
@@ -197,16 +200,16 @@ def _test():
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")
     
     # mo tests:
-    ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
+    '''ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
     ema.run()
     s2 = ema.get_series(9)
     print(s2.index)
-    print(s2)
+    print(s2)'''
     
     # kyle tets
-    vwap_indicator = VWAP(stock.ohlcv_df)
+    '''vwap_indicator = VWAP(stock.ohlcv_df)
     vwap_indicator.run()
-    print(f"VWAP for {symbol} in the last {periods[0]} days is {vwap_indicator.vwap}")
+    print(f"VWAP for {symbol} in the last {periods[0]} days is {vwap_indicator.vwap}")'''
     
     
 if __name__ == "__main__":
