@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
@@ -41,11 +41,11 @@ class Stock(object):
         #end TODO
         
         # get_historical_price_data() takes in only strings as paramemters. Hence, had to convert start and end date to string
-        start_date_as_str = datetime.date.isoformat(start_date);
-        end_date_as_str = datetime.date.isoformat(end_date);
+        start_date_as_str = datetime.date.isoformat(start_date)
+        end_date_as_str = datetime.date.isoformat(end_date)
         data = self.yfinancial.get_historical_price_data(start_date_as_str, end_date_as_str, "daily")
         self.ohlcv_df = pd.DataFrame(data)
-        return self.ohlcv_df;
+        return self.ohlcv_df
         
 
     def calc_returns(self):
@@ -109,7 +109,22 @@ class Stock(object):
         '''
         lookup wacc by using the table in the DiscountedCashFlowModel lecture powerpoint
         '''
-        result = None
+        if (beta < .8):
+            result = .05
+        elif (beta >= .8 and beta < 1):
+            result = .06
+        elif (beta >= 1 and beta < 1.1):
+            result = .065
+        elif (beta >= 1.1 and beta < 1.2):
+            result = .07
+        elif (beta >= 1.2 and beta < 1.3):
+            result = .075
+        elif (beta >= 1.3 and beta < 1.5):
+            result = .08
+        elif (beta >= 1.5 and beta < 1.6):
+            result = .085
+        elif (beta > 1.6):
+            result = .09
         # TODO:
         #end TODO
         return(result)
@@ -133,6 +148,7 @@ def _test():
     print(f"Cash and Cash Equivalent for {symbol} is {stock.get_cash_and_cash_equivalent()}")
     print(f"Total shares outstanding {stock.get_num_shares_outstanding()}")
     print(f"The beta is: {stock.get_beta()}")
+    print(f"The WACC is: {stock.lookup_wacc_by_beta(stock.get_beta())}")
 
 
 

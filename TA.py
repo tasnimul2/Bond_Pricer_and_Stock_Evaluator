@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 
 from datetime import date
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
@@ -37,6 +37,32 @@ class SimpleMovingAverages(object):
         result = None
         #TODO
         #end TODO
+        #period is a list of numbers 
+        # price_source is the time during the day that the price comes from (ie. closing / opening price  etc)
+        # there is only one column for the data frame, [the stock ticker] ie . self.ohlcv_df['AAPL']
+        #doing self.ohlcv_df.iloc[4] is prices (ie. it is the 4th row i nthe daya frame ). [iloc prints rows]
+        
+        '''the following code means that in the row 'prices' of the dataframe, get the data from the 0th colmn 
+         and set it to listOfPriceDicts . Note that this dataframe has a single column named AAPL, which can be accessed 
+         by printing 'self.ohlcv_df['AAPL']' or print(self.ohlcv_df). 
+         Hence df.loc['prices].values[0] means get 'prices' (row) from 'AAPL' or 0th (col) :
+        '''
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
+        source = price_source
+        givenPeriod = period
+        pricesList = []
+        for priceDict in listOfPriceDicts:
+             pricesList.append(priceDict.get(source))
+        
+        ''' Now that we have a list with all the prices, we now need to perform a linear convolution to get the SMA.
+        to do linear convolution, we will need 2 lists. The first list, we will call weights , the second list is the PriceList
+        with all the prices of the given price_source. This youtube tutorial teaches linear convolution :
+        https://www.youtube.com/watch?v=TrgfP7QD3Nk 
+        when doing np.convolve, it is simply doing linear convolution under the hood, given 2 lists'''
+        
+        weights = np.repeat(1.0/givenPeriod,givenPeriod) # this will return a np array of size givenPeriod, with value 1.0/givenPeriod
+        sma = np.convolve(pricesList,weights,'valid') # this will perfrom a linear convolution to get the SMA, and return it as numpy array
+        result = pd.Series(sma)
         return(result)
         
     def run(self, price_source = 'close'):
@@ -123,7 +149,6 @@ class RSI(object):
         
 '''Kyle'''
 class VWAP(object):
-
     def __init__(self, ohlcv_df):
         self.ohlcv_df = ohlcv_df
         self.vwap = None
@@ -135,8 +160,18 @@ class VWAP(object):
         '''
         calculate VWAP
         '''
-        #TODO: implement details here 
-        #end TODO
+      
+        endday = len(self.ohlcv_df.loc['prices'].values[0]) - 1 #length of dictionary to find the last day
+        startday = endday - 9
+        totalVolume = 0
+        totalPriceVolume = 0
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0]
+        for v in range(startday+1, endday+1):
+            totalVolume += listOfPriceDicts[v]['volume']
+        for pv in range(startday+1, endday+1):
+            totalPriceVolume += listOfPriceDicts[pv]['close'] * listOfPriceDicts[pv]['volume']
+        self.vwap = totalPriceVolume / totalVolume
+        
 
 
 
@@ -160,6 +195,19 @@ def _test():
     rsi_indicator.run()
 
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")
+    
+    # mo tests:
+    ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
+    ema.run()
+    s2 = ema.get_series(9)
+    print(s2.index)
+    print(s2)
+    
+    # kyle tets
+    vwap_indicator = VWAP(stock.ohlcv_df)
+    vwap_indicator.run()
+    print(f"VWAP for {symbol} in the last {periods[0]} days is {vwap_indicator.vwap}")
+    
     
 if __name__ == "__main__":
     _test()
