@@ -1,13 +1,9 @@
 '''
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
-
 @Student Name  : 
-
 @Date          : Nov 2021
-
 Technical Indicators
-
 '''
 import enum
 import calendar
@@ -83,6 +79,7 @@ class ExponentialMovingAverages(object):
         return(self._ema[period])
 
 '''Tamzid'''
+
 class RSI(object):
 
     def __init__(self, ohlcv_df, period = 14):
@@ -97,22 +94,31 @@ class RSI(object):
         '''
         calculate RSI
         '''
-    
-        diff = self._close.diff(1)
-        up_direction = diff.where(diff > 0, 0.0)
-        down_direction = -diff.where(diff < 0, 0.0)
-        min_periods = 0 if self._fillna else self._window
-        emaup = up_direction.ewm(
-            alpha=1 / self._window, min_periods=min_periods, adjust=False
-        ).mean()
-        emadn = down_direction.ewm(
-            alpha=1 / self._window, min_periods=min_periods, adjust=False
-        ).mean()
-        relative_strength = emaup / emadn
-        self._rsi = pd.Series(
-            np.where(emadn == 0, 100, 100 - (100 / (1 + relative_strength))),
-            index=self._close.index,
-        )
+        deltas = 
+        seed = deltas[:self.period+1]
+        up = seed[seed > 0].sum()/self.period
+        down = -seed[seed < 0].sum()/self.period
+        rs = up/down if down !=0 else 0
+        rsi = np.zeros_like(self.ohlcv_df)
+        rsi[:self.period] = 100. - 100./(1.+rs)
+
+        for i in range(self.period, len(self.ohlcv_df)):
+            delta = deltas[i-1]  # The diff is 1 shorter
+
+            if delta > 0:
+                upval = delta
+                downval = 0.
+            else:
+                upval = 0.
+                downval = -delta
+
+            up = (up*(self.period-1) + upval)/self.period
+            down = (down*(self.period-1) + downval)/self.period
+
+            rs = up/down
+            rsi[i] = 100. - 100./(1.+rs)
+
+        return rsi
 
         
 '''Kyle'''
@@ -143,21 +149,17 @@ def _test():
 
     stock.get_daily_hist_price(start_date, end_date)
 
-    periods = [9, 20, 50, 100, 200]
+    '''periods = [9, 20, 50, 100, 200]
     smas = SimpleMovingAverages(stock.ohlcv_df, periods)
     smas.run()
     s1 = smas.get_series(9)
     print(s1.index)
-    print(s1)
+    print(s1)'''
 
     rsi_indicator = RSI(stock.ohlcv_df)
     rsi_indicator.run()
 
     print(f"RSI for {symbol} is {rsi_indicator.rsi}")
-    #My test cases
-    print(f"The EMA is: {ExponentialMovingAverages._calc()}")
-    print(f"The RSI is: {RSI.run()}")
-
+    
 if __name__ == "__main__":
     _test()
-
