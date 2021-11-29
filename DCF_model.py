@@ -60,9 +60,78 @@ class DiscountedCashFlowModel(object):
         4. Compute the PV as cash + short term investments - total debt + the above sum of discounted free cash flow
         5. Return the stock fair value of the stock
         '''
+        '''
+        freeCashFlow = self.stock.get_free_cashflow()
+        beta = self.stock.get_beta()
+        wacc = self.stock.lookup_wacc_by_beta(beta)
+        
+        list_of_cf = []
+        
+        for year in range(0,19):
+            cf = freeCashFlow * (1 + self.long_term_growth_rate ** year)
+            dcf = cf/(wacc ** year)
+            list_of_cf.append(dcf)
+        
+        terminal_cash_flow = (list_of_cf[-1] * wacc ** 20)/(wacc - (1 +self.long_term_growth_rate))
+        list_of_cf.append(terminal_cash_flow)
+        pv = sum(list_of_cf)
+        
+        cash_n_srt_trm_invstmnt = self.stock.get_cash_and_cash_equivalent()
+        total_debt = self.stock.get_total_debt()
+        num_shares = self.stock.get_num_shares_outstanding()
+        intrinsic_value = (cash_n_srt_trm_invstmnt - total_debt + pv)/num_shares
+        print(intrinsic_value)
+        '''
+        
+        
+        beta = self.stock.get_beta()
+        wacc = self.stock.lookup_wacc_by_beta(beta)
+        yearly_discount_factor = 1/(1+wacc)
+        freeCashFlow = self.stock.get_free_cashflow()
+        dcf = 0
+        prevCF =  0;
+        cf5 = 0
+        cf10 = 0
+        year_in_period = 1
+        dcf_for_given_year_from_today = []
+        dcf_for_given_year_from_today.append(freeCashFlow)
+        
+        
+        
+        for year in range(1,21):
+            if(year <= 5):
+                dcf =  freeCashFlow *  (1 + self.short_term_growth_rate)**year_in_period * yearly_discount_factor**year
+                year_in_period += 1
+                dcf_for_given_year_from_today.append(dcf)
+                if(year == 5):
+                    cf5 = dcf
+                    year_in_period = 1
+            elif(year <= 10):
+                dcf =  cf5 *  (1 + self.short_term_growth_rate)**year_in_period * yearly_discount_factor**year
+                year_in_period +=1
+                dcf_for_given_year_from_today.append(dcf)
+                if(year == 10):
+                    cf10 = dcf
+                    year_in_period = 1
+            elif(year <= 20):
+                dcf =  cf10 *  (1 + self.short_term_growth_rate)**year_in_period * yearly_discount_factor**year
+                year_in_period +=1
+                dcf_for_given_year_from_today.append(dcf)
+                if(year == 20):
+                    prevCF = dcf
+                    year_in_period = 1
+         
+                    
+        cash_n_srt_trm_invstmnt = self.stock.get_cash_and_cash_equivalent()
+        total_debt = self.stock.get_total_debt()
+        num_shares = self.stock.get_num_shares_outstanding()
+        intrinsic_value = (cash_n_srt_trm_invstmnt + sum(dcf_for_given_year_from_today) - total_debt)/num_shares
+        result = intrinsic_value;
         
         #TODO
         #end TODO
+        
+        result = intrinsic_value
         return(result)
 
 
@@ -72,7 +141,7 @@ def _test():
 
     stock = Stock(symbol)
     model = DiscountedCashFlowModel(stock, as_of_date)
-
+    
     print("Shares ", stock.get_num_shares_outstanding())
     print("FCC ", stock.get_free_cashflow())
     beta = stock.get_beta()
@@ -81,7 +150,7 @@ def _test():
     print("WACC ", wacc)
     print("Total debt ", stock.get_total_debt())
     print("cash ", stock.get_cash_and_cash_equivalent())
-
+    
     # look up EPS next 5Y from Finviz
     eps5y = 0.1543
     model.set_FCC_growth_rate(eps5y, eps5y/2, 0.04)
