@@ -19,7 +19,7 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
@@ -60,14 +60,36 @@ class DiscountedCashFlowModel(object):
         4. Compute the PV as cash + short term investments - total debt + the above sum of discounted free cash flow
         5. Return the stock fair value of the stock
         '''
+        shares = self.stock.get_num_shares_outstanding()
+        beta = self.stock.get_beta()
+        WACC = self.stock.lookup_wacc_by_beta(beta)
+        FCC = self.stock.get_free_cashflow()
+        PV = self.stock.yfinancial.get_cash() + self.stock.yfinancial.get_short_term_investments() - self.stock.get_total_debt()
+        DCF = 0
+        rate = 0
+        exp = 0
+        for i in range(1, 21):
+            if (i>0 and i<=5): 
+                rate = self.short_term_growth_rate
+            elif (i>5 and i<=10): 
+                rate = self.medium_term_growth_rate
+            elif (i>10 and i<=20): 
+                rate = self.long_term_growth_rate
+            if (i==6): exp = exp - 5
+            elif (i==11): exp = exp - 5
+            print(i,". Rate: ", rate)
+            exp = exp + 1
+            print(i,". exp", exp)
+            DCF += FCC * ((1 + rate )**exp) * (1/(1+WACC))**i
         
         #TODO
         #end TODO
+        result = (DCF - self.stock.get_total_debt())/shares
         return(result)
 
 
 def _test():
-    symbol = 'AAPL'
+    symbol = 'AMZN'
     as_of_date = datetime.date(2021, 11, 1)
 
     stock = Stock(symbol)

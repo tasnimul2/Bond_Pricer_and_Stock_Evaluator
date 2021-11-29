@@ -63,9 +63,9 @@ class Stock(object):
         return Total debt of the company
         '''
         # total debt = long term liabilities (debt) + current liabilities
-        liabilities = self.yfinancial.get_total_current_liabilities()
+        liabilities = self.yfinancial.get_total_current_liabilities() + self.yfinancial.get_other_current_liabilities()
         debt = self.yfinancial.get_long_term_debt()
-        result =  debt + liabilities;
+        result =  debt + liabilities
         return(result)
 
     '''Kyle'''
