@@ -2,7 +2,7 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
-@Student Name  : first last
+@Student Name  : Mohammed Chowdhury, Kyle Coleman, Tamzid Chowdhury
 
 @Date          : June 2021
 
@@ -19,12 +19,13 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 
 from stock import Stock
 
+'''Mohammed'''
 class DiscountedCashFlowModel(object):
     '''
     DCF Model:
@@ -59,30 +60,7 @@ class DiscountedCashFlowModel(object):
         3. Sum the discounted value of the FCC for the 20 years using similar approach as presented in class
         4. Compute the PV as cash + short term investments - total debt + the above sum of discounted free cash flow
         5. Return the stock fair value of the stock
-        '''
-        '''
-        freeCashFlow = self.stock.get_free_cashflow()
-        beta = self.stock.get_beta()
-        wacc = self.stock.lookup_wacc_by_beta(beta)
-        
-        list_of_cf = []
-        
-        for year in range(0,19):
-            cf = freeCashFlow * (1 + self.long_term_growth_rate ** year)
-            dcf = cf/(wacc ** year)
-            list_of_cf.append(dcf)
-        
-        terminal_cash_flow = (list_of_cf[-1] * wacc ** 20)/(wacc - (1 +self.long_term_growth_rate))
-        list_of_cf.append(terminal_cash_flow)
-        pv = sum(list_of_cf)
-        
-        cash_n_srt_trm_invstmnt = self.stock.get_cash_and_cash_equivalent()
-        total_debt = self.stock.get_total_debt()
-        num_shares = self.stock.get_num_shares_outstanding()
-        intrinsic_value = (cash_n_srt_trm_invstmnt - total_debt + pv)/num_shares
-        print(intrinsic_value)
-        '''
-        
+        '''  
         
         beta = self.stock.get_beta()
         wacc = self.stock.lookup_wacc_by_beta(beta)
@@ -95,8 +73,6 @@ class DiscountedCashFlowModel(object):
         year_in_period = 1
         dcf_for_given_year_from_today = []
         dcf_for_given_year_from_today.append(freeCashFlow)
-        
-        
         
         for year in range(1,21):
             if(year <= 5):
@@ -126,7 +102,7 @@ class DiscountedCashFlowModel(object):
         total_debt = self.stock.get_total_debt()
         num_shares = self.stock.get_num_shares_outstanding()
         intrinsic_value = (cash_n_srt_trm_invstmnt + sum(dcf_for_given_year_from_today) - total_debt)/num_shares
-        result = intrinsic_value;
+        result = intrinsic_value
         
         #TODO
         #end TODO
@@ -136,7 +112,7 @@ class DiscountedCashFlowModel(object):
 
 
 def _test():
-    symbol = 'AMZN'
+    symbol = 'AAPL'
     as_of_date = datetime.date(2021, 11, 1)
 
     stock = Stock(symbol)
