@@ -102,7 +102,7 @@ class DiscountedCashFlowModel(object):
         total_debt = self.stock.get_total_debt()
         num_shares = self.stock.get_num_shares_outstanding()
         intrinsic_value = (cash_n_srt_trm_invstmnt + sum(dcf_for_given_year_from_today) - total_debt)/num_shares
-        result = intrinsic_value;
+        result = intrinsic_value
         
         #TODO
         #end TODO
