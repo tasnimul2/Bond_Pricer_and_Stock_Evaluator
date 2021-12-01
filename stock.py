@@ -65,17 +65,19 @@ class Stock(object):
         return Total debt of the company
         '''
         # total debt = long term liabilities (debt) + current liabilities
-        try:
+        #totalLiabilities = 
+        currentDebt = self.yfinancial.get_total_current_liabilities() - self.yfinancial.get_account_payable() - self.yfinancial.get_other_current_liabilities()
+        '''try:
             liabilities = self.yfinancial.get_total_current_liabilities()
         except KeyError:
-            liabilities = 0
+            liabilities = 0'''
 
         try:
-            debt = self.yfinancial.get_long_term_debt()
+            longdebt = self.yfinancial.get_long_term_debt()
         except KeyError:
-            debt = 0
+            longdebt = 0
 
-        result =  debt + liabilities 
+        result =  longdebt + currentDebt 
         return(result)
 
     '''Kyle'''
@@ -167,7 +169,7 @@ class Stock(object):
 
 def _test():
     # a few basic unit tests
-    symbol = 'AAPL'
+    symbol = 'KO'
     stock = Stock(symbol)
     print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
 
@@ -182,7 +184,7 @@ def _test():
     print(f"Total shares outstanding {stock.get_num_shares_outstanding()}")
     print(f"The beta is: {stock.get_beta()}")
     print(f"The WACC is: {stock.lookup_wacc_by_beta(stock.get_beta())}")
-
+    
 
 
 
