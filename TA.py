@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from datetime import date
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
@@ -144,7 +144,29 @@ class RSI(object):
         calculate RSI
         '''
         #TODO: implement details here
-        # self.rsi = ...
+        day_lows = []
+        day_highs = []
+        list_of_dict = self.ohlcv_df.loc['prices'].values[0]
+
+        for priceDict in list_of_dict:
+            day_highs.append(priceDict.get('high'))
+            day_lows.append(priceDict.get('low'))
+
+        sum =0
+        for x in day_highs: 
+            sum = sum+x
+
+        avg_gain = sum/len(day_highs)
+
+        sum =0
+        for x in day_lows: 
+            sum = sum+x
+
+        avg_loss = sum/len(day_lows)
+
+        rs = avg_gain / avg_loss
+
+        self.rsi = 100 - (100/(1+rs))
         #end TODO
         
 '''Kyle'''
@@ -189,7 +211,7 @@ def _test():
     smas.run()
     s1 = smas.get_series(9)
     print(s1.index)
-    print(s1)
+    print("SMA", s1)
 
     rsi_indicator = RSI(stock.ohlcv_df)
     rsi_indicator.run()
