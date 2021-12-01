@@ -128,7 +128,7 @@ class ExponentialMovingAverages(object):
     def get_series(self, period):
         return(self._ema[period])
 
-'''Tamzid'''
+'''Tamzid + Mohammed'''
 class RSI(object):
 
     def __init__(self, ohlcv_df, period = 14):
@@ -170,6 +170,42 @@ class RSI(object):
 
         self.rsi = 100 - (100/(1+rs))
         #end TODO
+        ''' extraxt all the prices from the dataframe for the given stock and put it in a list'''
+        listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
+        source = 'close'
+        givenPeriod = self.period
+        pricesList = []
+        for priceDict in listOfPriceDicts:
+             pricesList.append(priceDict.get(source))
+             
+        '''with the given prices, calculate the rsi for the first period'''
+        deltas = np.diff(pricesList) # returns a numpy array where each index is current index - previous index, to get the difference (change , ie. delta)
+        seed = deltas[:givenPeriod+1] # seed is a list of deltas for the first period
+        up = seed[seed >=0].sum()/givenPeriod
+        down = -seed[seed < 0].sum()/givenPeriod
+        rs = up/down
+        rsi = np.zeros_like(pricesList) # rsi is initialized to a list of 0s of size priceList and of type priceList
+        rsi[:givenPeriod] = 100.0 - 100.0/(1.0 + rs) 
+        
+        ''' in a for loop, iterate though all the other days that come after 1st period  and get the rsi '''
+        for i in range(givenPeriod,len(pricesList)):
+            delta = deltas[i-1]
+            if delta > 0:
+                up_delta = delta
+                down_delta = 0.0
+            else:
+                up_delta = 0.0
+                down_delta = -delta
+            
+            up = (up * (givenPeriod - 1) + up_delta) / givenPeriod
+            down = (down * (givenPeriod-1) + down_delta) / givenPeriod
+            
+            rs = up/down
+            rsi[i] = 100.0 - 100.0/(1.0 + rs)
+            
+        result = pd.Series(rsi)
+        self.rsi = result
+        return result
         
 '''Kyle'''
 class VWAP(object):
