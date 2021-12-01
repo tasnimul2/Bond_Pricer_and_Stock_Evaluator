@@ -19,7 +19,7 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-from scipy.stats import norm
+'''from scipy.stats import norm'''
 
 from math import log, exp, sqrt
 
