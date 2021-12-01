@@ -88,10 +88,26 @@ def run():
         sma20 = sma_indicator.get_series(20)
         sma50 = sma_indicator.get_series(50)
         sma200 = sma_indicator.get_series(200)
+        ema10results = []
+        sma20results = []
+        sma50results = []
+        sma200results = []
+        for i in range(len(ema10)-5, len(ema10)):
+            ema10results.append(ema10.tail(5)[i])
+
+        for i in range(len(sma20)-5, len(sma20)):
+            sma20results.append(sma20.tail(5)[i])
+        
+        for i in range(len(sma50)-5, len(sma50)):
+            sma50results.append(sma50.tail(5)[i])
+        
+        for i in range(len(sma200)-5, len(sma200)):         
+            sma200results.append(sma200.tail(5)[i])
+
 
         yfinance = MyYahooFinancials(symbol)
 
-        def get_marketcap():#ERASE AND PUT IN STOCK.PY
+        def get_marketcap():
             return yfinance.get_market_cap()
 
         def get_revenue():
@@ -110,7 +126,7 @@ def run():
         yfinance = MyYahooFinancials(symbol,'annual')
 
         #print(fair_value)
-        stockStats = [symbol, row['EPS Next 5Y in percent'], fair_value, listOfPriceDicts[len(listOfPriceDicts)- 1]['close'], get_sector(), get_marketcap(), stock.get_beta(), stock.get_cash_and_cash_equivalent(), stock.get_total_debt(), stock.get_free_cashflow(), get_PE_ratio(), get_PS_ratio(), rsi, ema10, sma20, sma50, sma200]
+        stockStats = [symbol, row['EPS Next 5Y in percent'], fair_value, listOfPriceDicts[len(listOfPriceDicts)- 1]['close'], get_sector(), get_marketcap(), stock.get_beta(), stock.get_cash_and_cash_equivalent(), stock.get_total_debt(), stock.get_free_cashflow(), get_PE_ratio(), get_PS_ratio(), rsi, ema10results, sma20results, sma50results, sma200results]
         results.append(stockStats)
         # pull additional fields
         # ...

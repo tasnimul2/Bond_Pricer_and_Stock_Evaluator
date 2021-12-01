@@ -144,27 +144,29 @@ class RSI(object):
         calculate RSI
         '''
         #TODO: implement details here
-        day_lows = []
-        day_highs = []
+        gain = []
+        loss = []
         list_of_dict = self.ohlcv_df.loc['prices'].values[0]
 
-        for priceDict in list_of_dict:
-            day_highs.append(priceDict.get('high'))
-            day_lows.append(priceDict.get('low'))
+        for i in range(len(list_of_dict)-14, len(list_of_dict)):
+            if (list_of_dict[i]['close']-list_of_dict[i-1]['close'] < 0):
+                loss.append(list_of_dict[i]['close']-list_of_dict[i-1]['close'])
+            else:
+                gain.append(list_of_dict[i]['close']-list_of_dict[i-1]['close'])
 
-        sum =0
-        for x in day_highs: 
-            sum = sum+x
+        sumLoss = 0
+        sumGain = 0
 
-        avg_gain = sum/len(day_highs)
+        for j in range(0, len(loss)):
+            sumLoss += loss[j]
 
-        sum =0
-        for x in day_lows: 
-            sum = sum+x
+        for j in range(0, len(gain)):
+            sumGain += gain[j]
 
-        avg_loss = sum/len(day_lows)
+        avgGain = sumGain/14
+        avgLoss = sumLoss/14
 
-        rs = avg_gain / avg_loss
+        rs = avgGain + avgLoss
 
         self.rsi = 100 - (100/(1+rs))
         #end TODO
@@ -222,8 +224,9 @@ def _test():
     ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
     ema.run()
     s2 = ema.get_series(9)
-    print(s2.index)
+    #print(s2.index)
     print(s2)
+    print("PRINT",s2.tail(5)[474])
     
     # kyle tets
     vwap_indicator = VWAP(stock.ohlcv_df)
