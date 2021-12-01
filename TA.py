@@ -144,31 +144,6 @@ class RSI(object):
         calculate RSI
         '''
         #TODO: implement details here
-        gain = []
-        loss = []
-        list_of_dict = self.ohlcv_df.loc['prices'].values[0]
-
-        for i in range(len(list_of_dict)-14, len(list_of_dict)):
-            if (list_of_dict[i]['close']-list_of_dict[i-1]['close'] < 0):
-                loss.append(list_of_dict[i]['close']-list_of_dict[i-1]['close'])
-            else:
-                gain.append(list_of_dict[i]['close']-list_of_dict[i-1]['close'])
-
-        sumLoss = 0
-        sumGain = 0
-
-        for j in range(0, len(loss)):
-            sumLoss += loss[j]
-
-        for j in range(0, len(gain)):
-            sumGain += gain[j]
-
-        avgGain = sumGain/14
-        avgLoss = sumLoss/14
-
-        rs = avgGain + avgLoss
-
-        self.rsi = 100 - (100/(1+rs))
         #end TODO
         ''' extraxt all the prices from the dataframe for the given stock and put it in a list'''
         listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
@@ -260,9 +235,9 @@ def _test():
     ema = ExponentialMovingAverages(stock.ohlcv_df,periods)
     ema.run()
     s2 = ema.get_series(9)
-    #print(s2.index)
+    print(s2.index)
     print(s2)
-    print("PRINT",s2.tail(5)[474])
+    #print("PRINT",s2.tail(5)[474])
     
     # kyle tets
     vwap_indicator = VWAP(stock.ohlcv_df)
