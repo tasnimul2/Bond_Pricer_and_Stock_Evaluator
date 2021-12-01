@@ -3,7 +3,7 @@
 @Instructor    : Dr. Alex Pang
 @Date          : June 2021
 
-@Student Name  : 
+@Student Name  : Mohammed Chowdhury, Kyle Coleman, Tamzid Chowdhury
 
 @Date          : Nov 2021
 
@@ -50,7 +50,6 @@ def run():
 
     '''
     input_fname = "StockUniverse.csv"
-    input_fname = "test_input.csv" #REMOVE AND CHANGE TO STOCKUNIVERSE
     output_fname = "StockUniverseOutput.csv"#THIS IS NOT USED. UPDATE output_fname to STOCKUNIVERSEOUTPUT BEFORE SUBMISSION
 
     
@@ -60,7 +59,7 @@ def run():
     results = []
     for index, row in df.iterrows():
         symbol = row['Symbol'] # Remove
-        print(symbol) #
+        print(f"Running analysis on {symbol}, please wait...") #
         stock = Stock(symbol, 'annual')
         stock.get_daily_hist_price(datetime.date(2020, 1, 1), as_of_date)
         model = DiscountedCashFlowModel(stock, as_of_date)
@@ -72,12 +71,9 @@ def run():
         model.set_FCC_growth_rate(short_term_growth_rate, medium_term_growth_rate, long_term_growth_rate)
         
         fair_value = model.calc_fair_value()
-
         listOfPriceDicts = stock.ohlcv_df.loc['prices'].values[0]
-
         rsi_indicator = RSI(stock.ohlcv_df)
         rsi_indicator.run()
-        rsi = rsi_indicator.rsi
         emaPeriods = [10]
         smaPeriods = [20,50,200]
         ema_indicator = ExponentialMovingAverages(stock.ohlcv_df, emaPeriods)
@@ -88,10 +84,12 @@ def run():
         sma20 = sma_indicator.get_series(20)
         sma50 = sma_indicator.get_series(50)
         sma200 = sma_indicator.get_series(200)
+        rsi14 = rsi_indicator.get_series()
         ema10results = []
         sma20results = []
         sma50results = []
         sma200results = []
+        rsi14results = []
         for i in range(len(ema10)-5, len(ema10)):
             ema10results.append(ema10.tail(5)[i])
 
@@ -104,7 +102,10 @@ def run():
         for i in range(len(sma200)-5, len(sma200)):         
             sma200results.append(sma200.tail(5)[i])
 
-
+        for i in range(len(rsi14)-5,len(rsi14)):
+            rsi14results.append(rsi14.tail(5)[i])
+            
+        
         yfinance = MyYahooFinancials(symbol)
 
         def get_marketcap():
@@ -126,7 +127,8 @@ def run():
         yfinance = MyYahooFinancials(symbol,'annual')
 
         #print(fair_value)
-        stockStats = [symbol, row['EPS Next 5Y in percent'], fair_value, listOfPriceDicts[len(listOfPriceDicts)- 1]['close'], get_sector(), get_marketcap(), stock.get_beta(), stock.get_cash_and_cash_equivalent(), stock.get_total_debt(), stock.get_free_cashflow(), get_PE_ratio(), get_PS_ratio(), rsi, ema10results, sma20results, sma50results, sma200results]
+        print(f"Finishing analysis on {symbol}, please wait...")
+        stockStats = [symbol, row['EPS Next 5Y in percent'], fair_value, listOfPriceDicts[len(listOfPriceDicts)- 1]['close'], get_sector(), get_marketcap(), stock.get_beta(), stock.get_cash_and_cash_equivalent(), stock.get_total_debt(), stock.get_free_cashflow(), get_PE_ratio(), get_PS_ratio(), rsi14results, ema10results, sma20results, sma50results, sma200results]
         results.append(stockStats)
         # pull additional fields
         # ...
@@ -134,8 +136,12 @@ def run():
     ndf = pd.DataFrame(columns=("Symbol","EPS Next 5Y in percent","DCF value","Current Price","Sector","Market Cap","Beta","Total Assets","Total Debt","Free Cash Flow","P/E Ratio","P/S Ratio","RSI","10 day EMA","20 day SMA","50 day SMA","200 day SMA"))
     for i in range(0,len(results)):
         ndf.loc[i] = results[i]
-    odf = ndf.to_csv("test_output.csv", index=False)
-
+    odf = ndf.to_csv(output_fname, index=False)
+    print("*********************************************")
+    print("***ANALYSIS COMPLETED FOR ALL STOCKS***")
+    print("*********************************************")
+    print(f"All DCF data has been outputted to  {output_fname}.")
+    print("NOTE : The technical indicator columns will only show last 5 days")
     # save the output into a StockUniverseOutput.csv file
     
     # ....

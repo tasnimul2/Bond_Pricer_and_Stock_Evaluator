@@ -3,14 +3,14 @@
 @Instructor    : Dr. Alex Pang
 @Date          : June 2021
 
-@Student Name  : first last
+@Student Name  : Mohammed Chowdhury, Kyle Coleman, Tamzid Chowdhury
 
 https://github.com/JECSand/yahoofinancials
 
 '''
 
 from yahoofinancials import YahooFinancials 
-import yfinance as yf
+
 
 class MyYahooFinancials(YahooFinancials):
     '''
@@ -47,21 +47,6 @@ class MyYahooFinancials(YahooFinancials):
     def get_short_term_investments(self):
         return self._financial_statement_data('balance', 'balanceSheetHistory', 'shortTermInvestments', self.freq)
     
-    '''def get_marketcap(self):#ERASE AND PUT IN STOCK.PY
-        return self.get_market_cap()
-
-    def get_revenue(self):
-        return self.get_total_revenue()
-
-    def get_PE_ratio(self):
-        return self.get_pe_ratio()
-
-    def get_PS_ratio(self):
-        return (self.get_marketcap() / self.get_revenue())
-
-    def get_sector(self):
-        stock = yf.Ticker(self.symbol)
-        return stock.info['sector']'''
 
 
 def _test():

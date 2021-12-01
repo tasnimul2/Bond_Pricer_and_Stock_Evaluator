@@ -2,6 +2,7 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
+@Group : Rocket
 @Student Name  : Mohammed Chowdhury, Kyle Coleman, Tamzid Chowdhury
 
 @Date          : June 2021

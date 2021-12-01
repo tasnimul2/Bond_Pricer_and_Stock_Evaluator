@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from datetime import date
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 

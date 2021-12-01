@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 
@@ -67,11 +67,7 @@ class Stock(object):
         # total debt = long term liabilities (debt) + current liabilities
         #totalLiabilities = 
         currentDebt = self.yfinancial.get_total_current_liabilities() - self.yfinancial.get_account_payable() - self.yfinancial.get_other_current_liabilities()
-        '''try:
-            liabilities = self.yfinancial.get_total_current_liabilities()
-        except KeyError:
-            liabilities = 0'''
-
+        
         try:
             longdebt = self.yfinancial.get_long_term_debt()
         except KeyError:
@@ -86,7 +82,7 @@ class Stock(object):
         return Free Cashflow of the company
         '''
 
-        '''Free Cash Flow = Operating Cash Flow – Capital Expenditure'''
+        '''Free Cash Flow is Operating Cash Flow – Capital Expenditure'''
         try:
             ocf = self.yfinancial.get_operating_cashflow()
         except KeyError:
@@ -96,9 +92,7 @@ class Stock(object):
             ce = self.yfinancial.get_capital_expenditures()
         except KeyError:
             ce = 0
-
-        '''ocf = self.yfinancial.get_operating_cashflow()
-        ce = self.yfinancial.get_capital_expenditures()'''    
+   
         result = ocf + ce
         return(result)
 
@@ -119,8 +113,7 @@ class Stock(object):
 
         result = cash + short
         return(result)
-        '''result = self.yfinancial.get_cash() + self.yfinancial.get_short_term_investments()
-        return(result)'''
+        
         
 
     '''Tamzid'''
