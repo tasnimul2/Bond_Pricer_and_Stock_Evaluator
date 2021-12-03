@@ -11,11 +11,13 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 
 from utils import MyYahooFinancials 
+
+
 
 class Stock(object):
     '''
@@ -28,7 +30,7 @@ class Stock(object):
         self.dividend_yield = dividend_yield
         self.yfinancial = MyYahooFinancials(symbol, freq)
         self.ohlcv_df = None
-
+        
     '''Mohammed'''
     def get_daily_hist_price(self, start_date, end_date):
         '''
@@ -63,9 +65,15 @@ class Stock(object):
         return Total debt of the company
         '''
         # total debt = long term liabilities (debt) + current liabilities
-        liabilities = self.yfinancial.get_total_current_liabilities()
-        debt = self.yfinancial.get_long_term_debt()
-        result =  debt + liabilities ;
+        #totalLiabilities = 
+        currentDebt = self.yfinancial.get_total_current_liabilities() - self.yfinancial.get_account_payable() - self.yfinancial.get_other_current_liabilities()
+        
+        try:
+            longdebt = self.yfinancial.get_long_term_debt()
+        except KeyError:
+            longdebt = 0
+
+        result =  longdebt + currentDebt 
         return(result)
 
     '''Kyle'''
@@ -74,9 +82,17 @@ class Stock(object):
         return Free Cashflow of the company
         '''
 
-        '''Free Cash Flow = Operating Cash Flow – Capital Expenditure'''
-        ocf = self.yfinancial.get_operating_cashflow()
-        ce = self.yfinancial.get_capital_expenditures()    
+        '''Free Cash Flow is Operating Cash Flow – Capital Expenditure'''
+        try:
+            ocf = self.yfinancial.get_operating_cashflow()
+        except KeyError:
+            ocf = 0
+
+        try:
+            ce = self.yfinancial.get_capital_expenditures()
+        except KeyError:
+            ce = 0
+   
         result = ocf + ce
         return(result)
 
@@ -85,8 +101,20 @@ class Stock(object):
         '''
         Return cash and cash equivalent of the company
         '''
-        result = self.yfinancial.get_cash() + self.yfinancial.get_short_term_investments()
+        try:
+            cash = self.yfinancial.get_cash()
+        except KeyError:
+            cash = 0
+
+        try:
+            short = self.yfinancial.get_short_term_investments()
+        except KeyError:
+            short = 0
+
+        result = cash + short
         return(result)
+        
+        
 
     '''Tamzid'''
     def get_num_shares_outstanding(self):
@@ -134,7 +162,7 @@ class Stock(object):
 
 def _test():
     # a few basic unit tests
-    symbol = 'AAPL'
+    symbol = 'KO'
     stock = Stock(symbol)
     print(f"Free Cash Flow for {symbol} is {stock.get_free_cashflow()}")
 
@@ -149,7 +177,7 @@ def _test():
     print(f"Total shares outstanding {stock.get_num_shares_outstanding()}")
     print(f"The beta is: {stock.get_beta()}")
     print(f"The WACC is: {stock.lookup_wacc_by_beta(stock.get_beta())}")
-
+    
 
 
 
