@@ -2,7 +2,7 @@
 @project       : Queens College CSCI 365/765 Computational Finance
 @Instructor    : Dr. Alex Pang
 
-@Student Name  : 
+@Student Name  : Mohammed Chowdhury , Kyle Coleman, Tamzid Chowdhury
 
 @Date          : Nov 2021
 
@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 from datetime import date
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 
@@ -144,7 +144,6 @@ class RSI(object):
         calculate RSI
         '''
         #TODO: implement details here
-        # self.rsi = ...
         #end TODO
         ''' extraxt all the prices from the dataframe for the given stock and put it in a list'''
         listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0];
@@ -225,7 +224,7 @@ def _test():
     smas.run()
     s1 = smas.get_series(9)
     print(s1.index)
-    print(s1)
+    print("SMA", s1)
 
     rsi_indicator = RSI(stock.ohlcv_df)
     rsi_indicator.run()
@@ -238,6 +237,7 @@ def _test():
     s2 = ema.get_series(9)
     print(s2.index)
     print(s2)
+    #print("PRINT",s2.tail(5)[474])
     
     # kyle tets
     vwap_indicator = VWAP(stock.ohlcv_df)

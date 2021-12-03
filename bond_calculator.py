@@ -70,11 +70,13 @@ class BondCalculator(object):
         # calculate the future cashflow vectors
         # TODO: calculate the one period discount factor
         # hint: need to use if else statement for different payment frequency cases
-
-        # discount factor = 1 / (1 x (1 + Discount Rate) ^ Period Number)
-        # since this is 1 period, we can exclude period number since 1/(1+yield) ^ 1 = 1/(1+yield)
-        # 1 period df = 1/(1+yield) for annual
-        # 1 period df = 1/(1+yield/2) for semi-annual
+        '''
+        note: 
+        discount factor is 1 / (1 x (1 + Discount Rate) ^ Period Number)
+        since this is 1 period, we can exclude period number since 1/(1+yield) ^ 1 = 1/(1+yield)
+        1 period df is 1/(1+yield) for annual
+        period df is 1/(1+yield/2) for semi-annual
+        '''
         if (bond.payment_freq == PaymentFrequency.ANNUAL):
             df = 1/(1+yld)
         elif(bond.payment_freq == PaymentFrequency.SEMIANNUAL):

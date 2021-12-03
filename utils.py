@@ -3,7 +3,7 @@
 @Instructor    : Dr. Alex Pang
 @Date          : June 2021
 
-@Student Name  : first last
+@Student Name  : Mohammed Chowdhury, Kyle Coleman, Tamzid Chowdhury
 
 https://github.com/JECSand/yahoofinancials
 
@@ -11,14 +11,17 @@ https://github.com/JECSand/yahoofinancials
 
 from yahoofinancials import YahooFinancials 
 
+
 class MyYahooFinancials(YahooFinancials):
     '''
     Extended class based on YahooFinancial libary
 
     '''
+    
     def __init__(self, symbol, freq = 'annual'):
         YahooFinancials.__init__(self, symbol)
         self.freq = freq
+        self.symbol = symbol
 
     def get_operating_cashflow(self):
         return self._financial_statement_data('cash', 'cashflowStatementHistory', 'totalCashFromOperatingActivities', self.freq)
@@ -43,9 +46,11 @@ class MyYahooFinancials(YahooFinancials):
 
     def get_short_term_investments(self):
         return self._financial_statement_data('balance', 'balanceSheetHistory', 'shortTermInvestments', self.freq)
+    
+
 
 def _test():
-    symbol = 'AAPL'
+    symbol = 'KO'
     
     yfinance = MyYahooFinancials(symbol)
 
