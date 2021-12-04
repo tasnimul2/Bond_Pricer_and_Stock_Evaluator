@@ -136,12 +136,14 @@ class BondCalculator(object):
             frac = get_30360_daycount_frac(prev_pay_date, settle_date)
         elif (bond.day_count == DayCount.DAYCOUNT_ACTUAL_360):
             frac = get_actual360_daycount_frac(prev_pay_date, settle_date)
+        else:
+            frac = get_actualactual_daycount_frac(prev_pay_date,settle_date)
 
         result = frac * bond.coupon * bond.principal/100
         # end TODO
         return(result)
 
-    ''' Tamzid '''
+    ''' Kyle + Tamzid '''
     def calc_macaulay_duration(self, bond, yld):
         '''
         time to cashflow weighted by PV
@@ -186,18 +188,18 @@ class BondCalculator(object):
 
         # TODO: implement details here
 
-        if self.payment_freq == PaymentFrequency.ANNUAL:
+        if bond.payment_freq == PaymentFrequency.ANNUAL:
             period = 1
-        elif self.payment_freq == PaymentFrequency.SEMIANNUAL:
+        elif bond.payment_freq == PaymentFrequency.SEMIANNUAL:
             period = 1/2
-        elif self.payment_freq == PaymentFrequency.QUARTERLY:
+        elif bond.payment_freq == PaymentFrequency.QUARTERLY:
             period = 1/4
-        elif self.payment_freq == PaymentFrequency.MONTHLY:
+        elif bond.payment_freq == PaymentFrequency.MONTHLY:
             period = 1/12
         else:
             period = None
 
-        result = -D/(1+yld*period)
+        result = D/(1+yld*period)
         # end TODO:
         return(result)
 
@@ -216,7 +218,8 @@ class BondCalculator(object):
             return match_price(x)
         yld = bisection(f, .00001, 1, 0.0001)
         # end TODO:
-        return(yld)
+        result = yld[0]
+        return(result)
 
     def calc_convexity(self, bond, yld):
         # calculate convexity of a bond at a certain yield yld
@@ -279,7 +282,7 @@ def _example4():
 
     yld = engine.calc_yield(bond, price)
     print("The yield of bond 4 is: ", yld)
-    '''assert( abs(yld - 0.04168) < 0.01)'''
+    assert( abs(yld - 0.04168) < 0.01)
 
 def _example5():
     # unit tests
