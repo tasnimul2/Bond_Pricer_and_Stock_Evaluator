@@ -195,17 +195,21 @@ class VWAP(object):
         '''
         calculate VWAP
         '''
+        vwaps = []
       
         endday = len(self.ohlcv_df.loc['prices'].values[0]) - 1 #length of dictionary to find the last day
-        startday = endday - 9
-        totalVolume = 0
-        totalPriceVolume = 0
+        
         listOfPriceDicts = self.ohlcv_df.loc['prices'].values[0]
-        for v in range(startday+1, endday+1):
-            totalVolume += listOfPriceDicts[v]['volume']
-        for pv in range(startday+1, endday+1):
-            totalPriceVolume += listOfPriceDicts[pv]['close'] * listOfPriceDicts[pv]['volume']
-        self.vwap = totalPriceVolume / totalVolume
+        for days in range(9, endday):
+            totalVolume = 0
+            totalPriceVolume = 0
+            for v in range(days-9, days):
+                totalVolume += listOfPriceDicts[v]['volume']
+            for pv in range(days-9, days):
+                totalPriceVolume += listOfPriceDicts[pv]['close'] * listOfPriceDicts[pv]['volume']
+            vwaps.append(totalPriceVolume/totalVolume)
+            result = pd.Series(vwaps)
+        self.vwap = result
         
 
 

@@ -199,7 +199,7 @@ class BondCalculator(object):
         else:
             period = None
 
-        result = -D/(1+yld*period)
+        result = D/(1+yld*period)
         # end TODO:
         return(result)
 
