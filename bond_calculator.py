@@ -160,20 +160,20 @@ class BondCalculator(object):
         elif(bond.payment_freq == PaymentFrequency.CONTINUOUS):
             n = None
 
+        wavg = 0
+        for j in range(1, bond.term*n + 1):
+            if (j < bond.term*n):
+                wavg += j/n * ((bond.coupon/n) * bond.principal) / ((1 + yld/n)**j )
+            elif(j == bond.term*n):
+                wavg += j/n * (bond.principal + ((bond.coupon/n) * bond.principal)) / ((1 + yld/n)**j)
+
         PVs = 0
         for i in range(1, bond.term +1):
-            if (i != bond.term):
-                PVs += ((yld/n) * bond.principal) * (1 / (1 + yld/n)**i )
+            if (i < bond.term):
+                PVs += ((yld/n) * self.calc_clean_price(bond, yld)) * (1 / (1 + yld/n)**i )
             elif(i == bond.term):
-                PVs +=  (bond.principal + (yld/n) * bond.principal) * (1 / (1 + yld/n)**i )
-
-        wavg = 0
-        for j in range(1, bond.term + 1):
-            if (j != bond.term):
-                wavg += j * ((yld/n) * bond.principal) * (1 / (1 + yld/n)**j )
-            elif(j == bond.term):
-                wavg += j * (bond.principal + (yld/n) * bond.principal) * (1 / (1 + yld/n)**j )
-
+                PVs +=  (self.calc_clean_price(bond, yld) + (yld/n) * self.calc_clean_price(bond, yld)) / (1 + yld/n)**i 
+        
         result = wavg/PVs
 
         # end TODO
