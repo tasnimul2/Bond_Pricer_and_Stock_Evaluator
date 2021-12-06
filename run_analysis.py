@@ -71,7 +71,7 @@ def run():
         model.set_FCC_growth_rate(short_term_growth_rate, medium_term_growth_rate, long_term_growth_rate)
         
         fair_value = model.calc_fair_value()
-        print(fair_value)
+        print("DCF",fair_value)
         listOfPriceDicts = stock.ohlcv_df.loc['prices'].values[0]
         rsi_indicator = RSI(stock.ohlcv_df)
         rsi_indicator.run()

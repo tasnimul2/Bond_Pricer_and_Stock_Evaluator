@@ -76,7 +76,6 @@ class DiscountedCashFlowModel(object):
         listOfPriceDicts = self.stock.ohlcv_df.loc['prices'].values[0]
         #get_cash_and_cash_equivalent()
         #dcf = fcc
-        print("fcc", fcc)
         for i in range(1, 20 + 1):
             exp = i
             if (i<6):
@@ -91,7 +90,6 @@ class DiscountedCashFlowModel(object):
                 dcf += ((fcc)*(1+self.long_term_growth_rate)**exp)*(1/((1+wacc)**i))
         PV = cash + dcf - debt
         result = PV/shares
-        print("DCF=", result)
         return(result)
 
 
