@@ -20,7 +20,7 @@ import pandas as pd
 import numpy as np
 
 import datetime 
-'''from scipy.stats import norm'''
+from scipy.stats import norm
 
 from math import log, exp, sqrt
 
@@ -65,50 +65,33 @@ class DiscountedCashFlowModel(object):
         
         beta = self.stock.get_beta()
         wacc = self.stock.lookup_wacc_by_beta(beta)
-        yearly_discount_factor = 1/(1+wacc)
-        freeCashFlow = self.stock.get_free_cashflow()
+        debt = self.stock.get_total_debt()
+        cash = self.stock.get_cash_and_cash_equivalent()
+        fcc = self.stock.get_free_cashflow()
+        shares = self.stock.get_num_shares_outstanding()
         dcf = 0
-        prevCF =  0;
-        cf5 = 0
-        cf10 = 0
-        year_in_period = 1
-        dcf_for_given_year_from_today = []
-        dcf_for_given_year_from_today.append(freeCashFlow)
-        
-        for year in range(1,21):
-            if(year <= 5):
-                dcf =  freeCashFlow *  (1 + self.short_term_growth_rate)**year_in_period * yearly_discount_factor**year
-                year_in_period += 1
-                dcf_for_given_year_from_today.append(dcf)
-                if(year == 5):
-                    cf5 = dcf
-                    year_in_period = 1
-            elif(year <= 10):
-                dcf =  cf5 *  (1 + self.short_term_growth_rate)**year_in_period * yearly_discount_factor**year
-                year_in_period +=1
-                dcf_for_given_year_from_today.append(dcf)
-                if(year == 10):
-                    cf10 = dcf
-                    year_in_period = 1
-            elif(year <= 20):
-                dcf =  cf10 *  (1 + self.short_term_growth_rate)**year_in_period * yearly_discount_factor**year
-                year_in_period +=1
-                dcf_for_given_year_from_today.append(dcf)
-                if(year == 20):
-                    prevCF = dcf
-                    year_in_period = 1
-         
-                    
-        cash_n_srt_trm_invstmnt = self.stock.get_cash_and_cash_equivalent()
-        total_debt = self.stock.get_total_debt()
-        num_shares = self.stock.get_num_shares_outstanding()
-        intrinsic_value = (cash_n_srt_trm_invstmnt + sum(dcf_for_given_year_from_today) - total_debt)/num_shares
-        result = intrinsic_value
-        
-        #TODO
-        #end TODO
-        
-        result = intrinsic_value
+        start_date = datetime.date(2020, 1, 1)
+        end_date = datetime.date.today()
+        self.stock.get_daily_hist_price(start_date, end_date)
+        listOfPriceDicts = self.stock.ohlcv_df.loc['prices'].values[0]
+        #get_cash_and_cash_equivalent()
+        #dcf = fcc
+        print("fcc", fcc)
+        for i in range(1, 20 + 1):
+            exp = i
+            if (i<6):
+                dcf += ((fcc)*(1+self.short_term_growth_rate)**exp)*(1/((1+wacc)**i))
+            elif (i>=6 and i<11):
+                if(i==6): fcc *= (1+self.short_term_growth_rate)**5
+                exp -= 5
+                dcf += ((fcc)*(1+self.medium_term_growth_rate)**exp)*(1/((1+wacc)**i))
+            elif (i>=11 and i<21):
+                if(i==11): fcc *= (1+self.medium_term_growth_rate)**5
+                exp -= 10
+                dcf += ((fcc)*(1+self.long_term_growth_rate)**exp)*(1/((1+wacc)**i))
+        PV = cash + dcf - debt
+        result = PV/shares
+        print("DCF=", result)
         return(result)
 
 

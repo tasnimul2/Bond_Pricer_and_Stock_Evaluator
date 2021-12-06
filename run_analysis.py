@@ -50,9 +50,9 @@ def run():
 
     '''
     input_fname = "StockUniverse.csv"
-    output_fname = "StockUniverseOutput.csv"#THIS IS NOT USED. UPDATE output_fname to STOCKUNIVERSEOUTPUT BEFORE SUBMISSION
+    output_fname = "StockUniverseOutput.csv"
 
-    
+
     as_of_date = datetime.date(2021, 12, 1)
     df = pd.read_csv(input_fname)
     # TODO
@@ -71,6 +71,7 @@ def run():
         model.set_FCC_growth_rate(short_term_growth_rate, medium_term_growth_rate, long_term_growth_rate)
         
         fair_value = model.calc_fair_value()
+        print(fair_value)
         listOfPriceDicts = stock.ohlcv_df.loc['prices'].values[0]
         rsi_indicator = RSI(stock.ohlcv_df)
         rsi_indicator.run()
