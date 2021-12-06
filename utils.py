@@ -50,7 +50,7 @@ class MyYahooFinancials(YahooFinancials):
 
 
 def _test():
-    symbol = 'KO'
+    symbol = 'AAPL'
     
     yfinance = MyYahooFinancials(symbol)
 
