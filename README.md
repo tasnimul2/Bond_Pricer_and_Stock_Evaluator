@@ -1,7 +1,14 @@
 # :chart_with_upwards_trend: Bond Pricer and Stock Evaluator :chart_with_downwards_trend:
 
+### How to use the app:
+1. Clone the github repo
+2. populate the StockUniverse.csv file with stock ticker and estimated EPS for the next 5Y (in percent)
+3. run the program using: `python run_analysis.py`
+4. Wait for the program to indicate completion
+5. StockUniverseOutput.csv is populated with the evlation 
+ 
 ### For the Stock Evalutator:
--  The input is a CSV file with  stock ticker symbol and the EPS Next 5Y in percent from finviz 
+-  The input is a CSV file with  stock ticker symbol and the EPS Next 5Y (in percent) from finviz 
 - The output is a CSV file with DCF value, 	Current Price,	Sector, 	Market Cap, 	Beta, 	Total Assets, 	Total Debt, 	Free Cash Flow, 	P/E Ratio, 	P/S Ratio, and the last 5 prices in the  	RSI, 	10 day EMA, 	20 day SMA, 	50 day SMA, 	200 day SMA
 
 [Sample input for Stock Evalution](https://github.com/tasnimul2/Computational_Finance_Project/blob/main/StockUniverse.csv)
