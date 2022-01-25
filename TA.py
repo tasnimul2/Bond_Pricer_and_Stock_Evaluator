@@ -128,7 +128,7 @@ class ExponentialMovingAverages(object):
     def get_series(self, period):
         return(self._ema[period])
 
-'''Tamzid + Mohammed'''
+'''Mohammed'''
 class RSI(object):
 
     def __init__(self, ohlcv_df, period = 14):
