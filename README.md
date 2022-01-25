@@ -5,8 +5,8 @@
 2. populate the StockUniverse.csv file with stock ticker and estimated EPS for the next 5Y (in percent)
 3. run the program using: `python run_analysis.py`
 4. Wait for the program to indicate completion
-5. StockUniverseOutput.csv is populated with the evlation 
- 
+5. StockUniverseOutput.csv is populated with the evaluator 
+
 ### For the Stock Evalutator:
 -  The input is a CSV file with  stock ticker symbol and the EPS Next 5Y (in percent) from finviz 
 - The output is a CSV file with DCF value, 	Current Price,	Sector, 	Market Cap, 	Beta, 	Total Assets, 	Total Debt, 	Free Cash Flow, 	P/E Ratio, 	P/S Ratio, and the last 5 prices in the  	RSI, 	10 day EMA, 	20 day SMA, 	50 day SMA, 	200 day SMA
